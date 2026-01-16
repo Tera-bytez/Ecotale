@@ -1,0 +1,148 @@
+# Ecotale Economy Plugin - English Translations
+# Format: key=value
+# Note: Keys are auto-prefixed with "ecotale." by Hytale's I18nModule
+
+# ========== Commands - Balance ==========
+balance.header=Your Balance
+balance.current=Current Balance: {0}
+balance.earned=Total Earned: {0}
+balance.spent=Total Spent: {0}
+
+# ========== Commands - Pay ==========
+pay.success=Sent {0} to {1}
+pay.received=Received {0} from {1}
+pay.fee=Transfer fee: {0}
+pay.insufficient=Insufficient funds
+pay.invalid_amount=Invalid amount
+pay.player_not_found=Player not found
+pay.self=You cannot pay yourself
+pay.minimum=Minimum transaction is {0}
+
+# ========== Commands - Admin ==========
+admin.give=Gave {0} to {1}
+admin.take=Took {0} from {1}
+admin.set=Set {1}'s balance to {0}
+admin.reset=Reset {0}'s balance
+admin.save=Economy data saved!
+admin.reload=Configuration reloaded!
+admin.no_data=No player balances found
+
+# ========== Commands - Top ==========
+top.header=Top Balances
+top.entry=#{0} {1} - {2}
+top.empty=No balances to display
+
+# ========== GUI - Admin Panel ==========
+gui.admin.title=Economy Admin Panel
+gui.admin.tab.dashboard=DASHBOARD
+gui.admin.tab.players=PLAYERS
+gui.admin.tab.top=TOP
+gui.admin.tab.log=LOG
+gui.admin.tab.config=CONFIG
+gui.admin.force_save=FORCE SAVE
+gui.admin.close=X
+
+# ========== GUI - Dashboard ==========
+gui.dashboard.economy_stats=Economy Stats
+gui.dashboard.total_circulating=Total Circulating
+gui.dashboard.total_players=Players with Balance
+gui.dashboard.total_money=Total Money
+gui.dashboard.avg_balance=Average Balance
+gui.dashboard.current_config=Current Configuration
+gui.dashboard.recent_activity=Recent Activity
+gui.dashboard.no_activity=No recent activity
+
+# ========== GUI - Players Tab ==========
+gui.players.search=Search players...
+gui.players.search_label=Search
+gui.players.select_player=Select a player
+gui.players.amount=Amount:
+gui.players.give=GIVE
+gui.players.take=TAKE
+gui.players.set=SET
+gui.players.reset=RESET
+gui.players.reset_confirm=CONFIRM?
+gui.players.balance=Balance: {0}
+gui.players.online=Online
+gui.players.offline=Offline
+gui.players.no_players=No players found
+
+# ========== GUI - Top Tab ==========
+gui.top.title=Top 10 Balances
+gui.top.rank=#{0}
+gui.top.no_data=No data available
+
+# ========== GUI - Log Tab ==========
+gui.log.filter=Filter by name...
+gui.log.no_entries=No transactions
+gui.log.requires_h2=Transaction log requires H2 storage
+gui.log.page=Page {0} of {1}
+
+# ========== GUI - Config Tab ==========
+gui.config.title=Configuration
+gui.config.reload=RELOAD CONFIG
+gui.config.save=SAVE CONFIG
+gui.config.saved=Configuration saved!
+gui.config.reset_defaults=RESET DEFAULTS
+gui.config.currency=Currency
+gui.config.symbol=Symbol:
+gui.config.name=Name:
+gui.config.limits=Balance Limits
+gui.config.starting=Starting:
+gui.config.max=Maximum:
+gui.config.transactions=Transactions
+gui.config.fee=Transfer Fee:
+gui.config.min=Minimum:
+gui.config.display=Display
+gui.config.hud=Enable HUD:
+gui.config.decimals=Decimals:
+gui.config.language=Language
+gui.config.lang=Language:
+gui.config.per_player=Use Player Language:
+gui.config.yes=Yes
+gui.config.no=No
+
+# ========== GUI - Pay Panel ==========
+gui.pay.title=Send Payment
+gui.pay.your_balance_label=Your Balance
+gui.pay.search=Search
+gui.pay.amount=Amount
+gui.pay.fee_label=Transfer Fee
+gui.pay.no_players=No players online
+gui.pay.recipient=Recipient:
+gui.pay.your_balance=Your Balance: {0}
+gui.pay.send=SEND PAYMENT
+gui.pay.cancel=CANCEL
+
+# ========== HUD ==========
+hud.balance=Balance: {0}
+
+# ========== Validation ==========
+error.invalid_amount=Invalid amount
+error.max_exceeded=Amount exceeds maximum ({0})
+error.select_player=Select a player first
+error.no_permission=You don't have permission
+
+# ========== Action Feedback ==========
+action.data_saved=Economy data saved!
+action.config_reloaded=Configuration reloaded!
+action.config_saved=Configuration saved to file!
+action.config_reset=Config reset to defaults!
+action.hud_enabled=HUD: Enabled
+action.hud_disabled=HUD: Disabled
+action.language_changed=Language: {0}
+action.per_player_enabled=Per-player language: Enabled
+action.per_player_disabled=Per-player language: Disabled
+action.gave=Gave {0} to {1}
+action.took=Took {0} from {1}
+action.set=Set {0} to {1}
+action.reset=Reset {0} to {1}
+action.failed_insufficient=Failed - insufficient funds
+
+# ========== Pay Feedback ==========
+pay.select_player=Please select a player first
+pay.enter_amount=Please enter a valid amount
+pay.payment_sent=Payment sent!
+pay.fee_notice=(Fee: {0})
+pay.balance_after=Balance After
+

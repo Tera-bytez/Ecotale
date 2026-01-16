@@ -1,0 +1,10 @@
+[
+  "Common/UI/Custom/Pages/Ecotale_AdminPage.ui",
+  "Common/UI/Custom/Pages/Ecotale_AdminPlayerEntry.ui",
+  "Common/UI/Custom/Pages/Ecotale_AdminTopEntry.ui",
+  "Common/UI/Custom/Pages/Ecotale_BalanceHud.ui",
+  "Common/UI/Custom/Pages/Ecotale_Common.ui",
+  "Common/UI/Custom/Pages/Ecotale_PayPage.ui",
+  "Common/UI/Custom/Pages/Ecotale_PayPlayerEntry.ui",
+  "assets/ecotale/textures/gui/hud/tile000.png"
+]

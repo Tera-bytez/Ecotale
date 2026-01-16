@@ -1,0 +1,147 @@
+# Ecotale Economy Plugin - Deutsche Übersetzungen
+# Format: key=value
+
+# ========== Commands - Balance ==========
+balance.header=Dein Kontostand
+balance.current=Aktueller Kontostand: {0}
+balance.earned=Gesamt Verdient: {0}
+balance.spent=Gesamt Ausgegeben: {0}
+
+# ========== Commands - Pay ==========
+pay.success={0} an {1} gesendet
+pay.received={0} von {1} erhalten
+pay.fee=Überweisungsgebühr: {0}
+pay.insufficient=Unzureichendes Guthaben
+pay.invalid_amount=Ungültiger Betrag
+pay.player_not_found=Spieler nicht gefunden
+pay.self=Du kannst dir selbst nicht bezahlen
+pay.minimum=Mindesttransaktion ist {0}
+
+# ========== Commands - Admin ==========
+admin.give={0} an {1} gegeben
+admin.take={0} von {1} genommen
+admin.set=Kontostand von {1} auf {0} gesetzt
+admin.reset=Kontostand von {0} zurückgesetzt
+admin.save=Wirtschaftsdaten gespeichert!
+admin.reload=Konfiguration neu geladen!
+admin.no_data=Keine Kontostände gefunden
+
+# ========== Commands - Top ==========
+top.header=Top Kontostände
+top.entry=#{0} {1} - {2}
+top.empty=Keine Kontostände anzuzeigen
+
+# ========== GUI - Admin Panel ==========
+gui.admin.title=Verwaltungspanel
+gui.admin.tab.dashboard=ÜBERSICHT
+gui.admin.tab.players=SPIELER
+gui.admin.tab.top=TOP
+gui.admin.tab.log=LOG
+gui.admin.tab.config=KONFIG
+gui.admin.force_save=SPEICHERN
+gui.admin.close=X
+
+# ========== GUI - Dashboard ==========
+gui.dashboard.economy_stats=Wirtschaftsstatistiken
+gui.dashboard.total_circulating=Gesamt im Umlauf
+gui.dashboard.total_players=Spieler mit Guthaben
+gui.dashboard.total_money=Gesamtgeld
+gui.dashboard.avg_balance=Durchschnittliches Guthaben
+gui.dashboard.current_config=Aktuelle Konfiguration
+gui.dashboard.recent_activity=Letzte Aktivität
+gui.dashboard.no_activity=Keine aktuelle Aktivität
+
+# ========== GUI - Players Tab ==========
+gui.players.search=Suchen...
+gui.players.search_label=Suche
+gui.players.select_player=Auswählen
+gui.players.amount=Betrag:
+gui.players.give=+
+gui.players.take=-
+gui.players.set=SET
+gui.players.reset=RESET
+gui.players.reset_confirm=OK?
+gui.players.balance=Guthaben: {0}
+gui.players.online=Online
+gui.players.offline=Offline
+gui.players.no_players=Keine Spieler
+
+# ========== GUI - Top Tab ==========
+gui.top.title=Top 10 Kontostände
+gui.top.rank=#{0}
+gui.top.no_data=Keine Daten verfügbar
+
+# ========== GUI - Log Tab ==========
+gui.log.filter=Nach Name filtern...
+gui.log.no_entries=Keine Transaktionen
+gui.log.requires_h2=Log benötigt H2-Speicher
+gui.log.page=Seite {0} von {1}
+
+# ========== GUI - Config Tab ==========
+gui.config.title=Konfiguration
+gui.config.reload=NEU LADEN
+gui.config.save=SAVE
+gui.config.saved=Gespeichert!
+gui.config.reset_defaults=RESET
+gui.config.currency=Währung
+gui.config.symbol=Symbol:
+gui.config.name=Name:
+gui.config.limits=Guthabenlimits
+gui.config.starting=Start:
+gui.config.max=Maximum:
+gui.config.transactions=Transaktionen
+gui.config.fee=Gebühr:
+gui.config.min=Minimum:
+gui.config.display=Anzeige
+gui.config.hud=HUD anzeigen:
+gui.config.decimals=Dezimalstellen:
+gui.config.language=Sprache
+gui.config.lang=Sprache:
+gui.config.per_player=Spielersprache verwenden:
+gui.config.yes=Ja
+gui.config.no=Nein
+
+# ========== GUI - Pay Panel ==========
+gui.pay.title=Zahlung Senden
+gui.pay.your_balance_label=Dein Guthaben
+gui.pay.search=Suchen
+gui.pay.amount=Betrag
+gui.pay.fee_label=Überweisungsgebühr
+gui.pay.no_players=Keine Spieler online
+gui.pay.recipient=Empfänger:
+gui.pay.your_balance=Dein Guthaben: {0}
+gui.pay.send=SENDEN
+gui.pay.cancel=ABBRECHEN
+
+# ========== HUD ==========
+hud.balance=Guthaben: {0}
+
+# ========== Validierung ==========
+error.invalid_amount=Ungültiger Betrag
+error.max_exceeded=Betrag überschreitet Maximum ({0})
+error.select_player=Wähle zuerst einen Spieler
+error.no_permission=Keine Berechtigung
+
+# ========== Aktions-Feedback ==========
+action.data_saved=Wirtschaftsdaten gespeichert!
+action.config_reloaded=Konfiguration neu geladen!
+action.config_saved=Konfiguration gespeichert!
+action.config_reset=Konfig zurückgesetzt!
+action.hud_enabled=HUD: Aktiviert
+action.hud_disabled=HUD: Deaktiviert
+action.language_changed=Sprache: {0}
+action.per_player_enabled=Spielersprache: Aktiviert
+action.per_player_disabled=Spielersprache: Deaktiviert
+action.gave=Gab {0} an {1}
+action.took=Nahm {0} von {1}
+action.set=Setzte {0} auf {1}
+action.reset=Setzte {0} zurück auf {1}
+action.failed_insufficient=Fehlgeschlagen - unzureichendes Guthaben
+
+# ========== Zahlungs-Feedback ==========
+pay.select_player=Wähle zuerst einen Spieler
+pay.enter_amount=Gib einen gültigen Betrag ein
+pay.payment_sent=Zahlung gesendet!
+pay.fee_notice=(Gebühr: {0})
+pay.balance_after=Guthaben Danach
+

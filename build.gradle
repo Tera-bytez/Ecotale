@@ -1,0 +1,128 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '9.0.0-beta12'
+}
+
+version = project.mod_version
+group = project.mod_group
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+    withSourcesJar()
+}
+
+// Show detailed deprecation warnings
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:deprecation'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Hytale Server API
+    compileOnly files('z:/Hytale/patcher/work/download/hytale-server.jar')
+    
+    // Annotations
+    compileOnly 'org.checkerframework:checker-qual:3.42.0'
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+    compileOnly "org.slf4j:slf4j-api:1.7.30"
+    
+    // H2 Database for persistent storage
+    implementation 'com.h2database:h2:2.2.224'
+    
+    // MySQL Connector for shared database support
+    implementation 'com.mysql:mysql-connector-j:9.1.0'
+    
+    // SimpleHUD-Lib is now inlined in com.ecotale.lib.simplehud
+    // No external dependency needed
+}
+
+processResources {
+    var expandProps = [
+        'name'          : project.mod_name,
+        'version'       : project.mod_version,
+        'group'         : project.mod_group,
+        'description'   : project.mod_description,
+        'website'       : project.website,
+        'server_version': project.server_version,
+        'entry_point'   : project.entry_point
+    ]
+
+    filesMatching(['manifest.json']) {
+        expand expandProps
+    }
+    inputs.properties(expandProps)
+
+    from('src/main/resources/Common/UI/Custom/Pages') {
+        into 'UI/Custom/Pages'
+    }
+}
+
+tasks.register('generateAssetsJson') {
+    doLast {
+        def resourceDir = file('src/main/resources')
+        def outputFile = file('src/main/resources/assets.json')
+        def entries = []
+
+        def assetsDir = new File(resourceDir, 'assets')
+        if (assetsDir.exists()) {
+            assetsDir.eachFileRecurse { f ->
+                if (f.isFile()) {
+                    def rel = assetsDir.toPath().relativize(f.toPath()).toString().replace('\\', '/')
+                    entries.add("assets/" + rel)
+                }
+            }
+        }
+
+        def uiDir = new File(resourceDir, 'Common/UI/Custom/Pages')
+        if (uiDir.exists()) {
+            uiDir.eachFileRecurse { f ->
+                if (f.isFile() && f.name.endsWith('.ui')) {
+                    def rel = uiDir.toPath().relativize(f.toPath()).toString().replace('\\', '/')
+                    entries.add("Common/UI/Custom/Pages/" + rel)
+                }
+            }
+        }
+
+        def unique = entries.unique().sort()
+        outputFile.text = "[\n" + unique.collect { "  \"${it}\"" }.join(",\n") + "\n]\n"
+    }
+}
+
+processResources.dependsOn(tasks.named('generateAssetsJson'))
+
+jar {
+    archiveBaseName = project.mod_name
+    archiveVersion = project.mod_version
+    
+    manifest {
+        attributes(
+            'Implementation-Title': project.mod_name,
+            'Implementation-Version': project.mod_version
+        )
+    }
+}
+
+// Shadow JAR bundles H2 database AND SimpleHUD-Lib
+shadowJar {
+    archiveBaseName = project.mod_name
+    archiveVersion = project.mod_version
+    archiveClassifier = ''
+    
+    // Note: Not relocating SimpleHUD-Lib due to Java 25 ASM compatibility
+    // This is fine since SimpleHUD-Lib is bundled, not a shared library
+    
+    mergeServiceFiles()
+}
+
+// Task to copy built JAR to Hytale plugins folder
+tasks.register('installPlugin', Copy) {
+    dependsOn jar
+    from jar.archiveFile
+    into file(System.getProperty("user.home") + "/AppData/Roaming/Hytale/server/plugins")
+    doLast {
+        println "Installed ${project.mod_name}-${project.mod_version}.jar to plugins folder"
+    }
+}

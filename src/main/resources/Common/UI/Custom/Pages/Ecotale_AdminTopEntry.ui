@@ -1,0 +1,27 @@
+$E = "Ecotale_Common.ui";
+
+Group #TopEntry {
+  LayoutMode: Left;
+  Background: (Color: #1a2a4a);
+  Padding: (Top: 8, Bottom: 8, Left: 12, Right: 12);
+  Anchor: (Left: 0, Right: 0, Height: 36, Bottom: 4);
+  
+  Label #Rank {
+    Text: "#1";
+    Style: (FontSize: 14, TextColor: #FFD700, RenderBold: true);
+    Anchor: (Width: 36, Vertical: 0);
+  }
+  
+  Label #PlayerName {
+    Text: "PlayerName";
+    Style: (FontSize: 13, TextColor: #ffffff, RenderBold: true);
+    FlexWeight: 1;
+    Anchor: (Vertical: 0);
+  }
+  
+  Label #PlayerBalance {
+    Text: "$0.00";
+    Style: (FontSize: 14, TextColor: #32CD32, RenderBold: true);
+    Anchor: (Width: 140, Vertical: 0);
+  }
+}

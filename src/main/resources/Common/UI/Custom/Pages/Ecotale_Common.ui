@@ -1,0 +1,85 @@
+// Ecotale Common Styles
+// Importa este archivo en otras UIs: $E = "Ecotale_Common.ui";
+
+// === Color Palette ===
+@EcoGold = #FFD700;
+@EcoGreen = #32CD32;
+@EcoRed = #FF4444;
+@EcoBgDark = #1a1a2edd;
+@EcoBgCard = #16213ecc;
+@EcoTextWhite = #ffffff;
+@EcoTextGray = #888888;
+
+// === Label Styles ===
+@EcoTitleStyle = LabelStyle(
+  FontSize: 16,
+  TextColor: @EcoGold,
+  RenderBold: true,
+  HorizontalAlignment: Center
+);
+
+@EcoBalanceStyle = LabelStyle(
+  FontSize: 20,
+  TextColor: @EcoGreen,
+  RenderBold: true,
+  HorizontalAlignment: Center
+);
+
+@EcoLabelStyle = LabelStyle(
+  FontSize: 13,
+  TextColor: @EcoTextWhite,
+  RenderBold: false
+);
+
+@EcoLabelBoldStyle = LabelStyle(
+  FontSize: 13,
+  TextColor: @EcoTextWhite,
+  RenderBold: true
+);
+
+@EcoLabelGrayStyle = LabelStyle(
+  FontSize: 11,
+  TextColor: @EcoTextGray,
+  RenderBold: false
+);
+
+// === Button Styles ===
+@EcoButtonLabelStyle = LabelStyle(
+  FontSize: 12,
+  TextColor: @EcoTextWhite,
+  RenderBold: true,
+  RenderUppercase: true,
+  HorizontalAlignment: Center,
+  VerticalAlignment: Center
+);
+
+@EcoButtonStyle = TextButtonStyle(
+  Default: (Background: (Color: #2b3f66), LabelStyle: @EcoButtonLabelStyle),
+  Hovered: (Background: (Color: #35507f), LabelStyle: @EcoButtonLabelStyle),
+  Pressed: (Background: (Color: #233553), LabelStyle: @EcoButtonLabelStyle),
+  Disabled: (Background: (Color: #333333), LabelStyle: @EcoButtonLabelStyle)
+);
+
+@EcoButtonGreenStyle = TextButtonStyle(
+  Default: (Background: (Color: #1f6b3a), LabelStyle: @EcoButtonLabelStyle),
+  Hovered: (Background: (Color: #278348), LabelStyle: @EcoButtonLabelStyle),
+  Pressed: (Background: (Color: #19592f), LabelStyle: @EcoButtonLabelStyle),
+  Disabled: (Background: (Color: #333333), LabelStyle: @EcoButtonLabelStyle)
+);
+
+@EcoButtonRedStyle = TextButtonStyle(
+  Default: (Background: (Color: #7a2b2b), LabelStyle: @EcoButtonLabelStyle),
+  Hovered: (Background: (Color: #933737), LabelStyle: @EcoButtonLabelStyle),
+  Pressed: (Background: (Color: #662424), LabelStyle: @EcoButtonLabelStyle),
+  Disabled: (Background: (Color: #333333), LabelStyle: @EcoButtonLabelStyle)
+);
+
+@EcoButtonAccentStyle = TextButtonStyle(
+  Default: (Background: (Color: #b8860b), LabelStyle: @EcoButtonLabelStyle),
+  Hovered: (Background: (Color: #daa520), LabelStyle: @EcoButtonLabelStyle),
+  Pressed: (Background: (Color: #8b6914), LabelStyle: @EcoButtonLabelStyle),
+  Disabled: (Background: (Color: #333333), LabelStyle: @EcoButtonLabelStyle)
+);
+
+// === Card/Container Styles ===
+@EcoCardBackground = (Color: @EcoBgCard);

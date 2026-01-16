@@ -1,0 +1,148 @@
+# Ecotale Economy Plugin - Traducciones en Español
+# Formato: key=valor
+# Nota: Las keys se prefijan automáticamente con "ecotale." por I18nModule
+
+# ========== Comandos - Balance ==========
+balance.header=Tu Balance
+balance.current=Balance Actual: {0}
+balance.earned=Total Ganado: {0}
+balance.spent=Total Gastado: {0}
+
+# ========== Comandos - Pago ==========
+pay.success=Enviaste {0} a {1}
+pay.received=Recibiste {0} de {1}
+pay.fee=Comisión de transferencia: {0}
+pay.insufficient=Fondos insuficientes
+pay.invalid_amount=Cantidad inválida
+pay.player_not_found=Jugador no encontrado
+pay.self=No puedes pagarte a ti mismo
+pay.minimum=La transacción mínima es {0}
+
+# ========== Comandos - Admin ==========
+admin.give=Diste {0} a {1}
+admin.take=Quitaste {0} de {1}
+admin.set=Estableciste el balance de {1} a {0}
+admin.reset=Reiniciaste el balance de {0}
+admin.save=¡Datos de economía guardados!
+admin.reload=¡Configuración recargada!
+admin.no_data=No se encontraron balances
+
+# ========== Comandos - Top ==========
+top.header=Top Balances
+top.entry=#{0} {1} - {2}
+top.empty=No hay balances para mostrar
+
+# ========== GUI - Panel Admin ==========
+gui.admin.title=Panel de Administración
+gui.admin.tab.dashboard=INICIO
+gui.admin.tab.players=JUGADORES
+gui.admin.tab.top=TOP
+gui.admin.tab.log=LOG
+gui.admin.tab.config=CONFIG
+gui.admin.force_save=GUARDAR
+gui.admin.close=X
+
+# ========== GUI - Dashboard ==========
+gui.dashboard.economy_stats=Estadísticas
+gui.dashboard.total_circulating=Total en Circulación
+gui.dashboard.total_players=Jugadores con Balance
+gui.dashboard.total_money=Dinero Total
+gui.dashboard.avg_balance=Balance Promedio
+gui.dashboard.current_config=Configuración Actual
+gui.dashboard.recent_activity=Actividad Reciente
+gui.dashboard.no_activity=Sin actividad reciente
+
+# ========== GUI - Pestaña Jugadores ==========
+gui.players.search=Buscar...
+gui.players.search_label=Buscar
+gui.players.select_player=Seleccionar
+gui.players.amount=Monto:
+gui.players.give=+
+gui.players.take=-
+gui.players.set=SET
+gui.players.reset=RESET
+gui.players.reset_confirm=OK?
+gui.players.balance=Saldo: {0}
+gui.players.online=Online
+gui.players.offline=Offline
+gui.players.no_players=Sin jugadores
+
+# ========== GUI - Pestaña Top ==========
+gui.top.title=Top 10 Balances
+gui.top.rank=#{0}
+gui.top.no_data=Sin datos
+
+# ========== GUI - Pestaña Log ==========
+gui.log.filter=Filtrar por nombre...
+gui.log.no_entries=Sin transacciones
+gui.log.requires_h2=El registro requiere almacenamiento H2
+gui.log.page=Página {0} de {1}
+
+# ========== GUI - Pestaña Config ==========
+gui.config.title=Configuración
+gui.config.reload=RECARGAR
+gui.config.save=SAVE
+gui.config.saved=¡Guardado!
+gui.config.reset_defaults=RESET
+gui.config.currency=Moneda
+gui.config.symbol=Símbolo:
+gui.config.name=Nombre:
+gui.config.limits=Límites de Balance
+gui.config.starting=Inicial:
+gui.config.max=Máximo:
+gui.config.transactions=Transacciones
+gui.config.fee=Comisión:
+gui.config.min=Mínimo:
+gui.config.display=Visualización
+gui.config.hud=Activar HUD:
+gui.config.decimals=Decimales:
+gui.config.language=Idioma
+gui.config.lang=Idioma:
+gui.config.per_player=Usar Idioma del Jugador:
+gui.config.yes=Sí
+gui.config.no=No
+
+# ========== GUI - Panel de Pago ==========
+gui.pay.title=Enviar Pago
+gui.pay.your_balance_label=Tu Balance
+gui.pay.search=Buscar
+gui.pay.amount=Cantidad
+gui.pay.fee_label=Comisión
+gui.pay.no_players=Sin jugadores en línea
+gui.pay.recipient=Destinatario:
+gui.pay.your_balance=Tu Balance: {0}
+gui.pay.send=ENVIAR PAGO
+gui.pay.cancel=CANCELAR
+
+# ========== HUD ==========
+hud.balance=Saldo: {0}
+
+# ========== Validación ==========
+error.invalid_amount=Cantidad inválida
+error.max_exceeded=La cantidad excede el máximo ({0})
+error.select_player=Selecciona un jugador primero
+error.no_permission=No tienes permiso
+
+# ========== Retroalimentación de Acciones ==========
+action.data_saved=¡Datos de economía guardados!
+action.config_reloaded=¡Configuración recargada!
+action.config_saved=¡Configuración guardada!
+action.config_reset=¡Config restablecida!
+action.hud_enabled=HUD: Activado
+action.hud_disabled=HUD: Desactivado
+action.language_changed=Idioma: {0}
+action.per_player_enabled=Idioma por jugador: Activado
+action.per_player_disabled=Idioma por jugador: Desactivado
+action.gave=Dio {0} a {1}
+action.took=Quitó {0} de {1}
+action.set=Estableció {0} a {1}
+action.reset=Restableció {0} a {1}
+action.failed_insufficient=Falló - fondos insuficientes
+
+# ========== Retroalimentación de Pagos ==========
+pay.select_player=Selecciona un jugador primero
+pay.enter_amount=Ingresa una cantidad válida
+pay.payment_sent=¡Pago enviado!
+pay.fee_notice=(Comisión: {0})
+pay.balance_after=Saldo Después
+

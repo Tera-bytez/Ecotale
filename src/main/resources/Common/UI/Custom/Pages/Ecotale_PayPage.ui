@@ -1,0 +1,199 @@
+$E = "Ecotale_Common.ui";
+
+Group #PayRoot {
+  Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+  LayoutMode: Center;
+
+  Group #PayCard {
+    Anchor: (Width: 360, Height: 360);
+    Background: (Color: #1a1a2eee);
+    LayoutMode: Top;
+    Padding: (Top: 14, Bottom: 14, Left: 16, Right: 16);
+    OutlineColor: #3a4a6a;
+    OutlineSize: 1;
+  
+    // === Header ===
+    Group #Header {
+      LayoutMode: Left;
+      Anchor: (Height: 28, Bottom: 10);
+      
+      Group #HeaderSpacer {
+        Anchor: (Width: 28, Height: 28);
+      }
+      
+      Label #Title {
+        Text: "Send Payment";
+        Style: (FontSize: 18, TextColor: #FFD700, RenderBold: true, HorizontalAlignment: Center);
+        FlexWeight: 1;
+        Anchor: (Vertical: 0);
+      }
+
+      TextButton #CloseButton {
+        Text: "X";
+        Style: $E.@EcoButtonRedStyle;
+        Anchor: (Width: 28, Height: 28);
+      }
+    }
+    
+    // === Your Balance ===
+    Group #BalanceSection {
+      LayoutMode: Top;
+      Background: (Color: #0f1525);
+      Padding: (Top: 8, Bottom: 12, Left: 12, Right: 12);
+      Anchor: (Height: 56, Bottom: 10);
+      
+      Group #BalanceLabelRow {
+        LayoutMode: Left;
+        Anchor: (Height: 14, Bottom: 2);
+        
+        Label { FlexWeight: 1; }
+        Label #BalanceLabel {
+          Text: "Your Balance";
+          Style: (FontSize: 11, TextColor: #888888);
+        }
+        Label { FlexWeight: 1; }
+      }
+      
+      Group #BalanceValueRow {
+        LayoutMode: Left;
+        Anchor: (Height: 24);
+        
+        Label { FlexWeight: 1; }
+        Label #BalanceValue {
+          Text: "$0.00";
+          Style: (FontSize: 22, TextColor: #32CD32, RenderBold: true);
+        }
+        Label { FlexWeight: 1; }
+      }
+    }
+    
+    // === Search Input ===
+    Group #SearchSection {
+      LayoutMode: Left;
+      Anchor: (Bottom: 6);
+      
+      Label #SearchLabel {
+        Text: "Search";
+        Style: (FontSize: 11, TextColor: #aaaaaa);
+        Anchor: (Width: 60, Vertical: 0);
+      }
+      
+      Group #SearchInputBox {
+        Background: (Color: #0f1525);
+        Padding: (Left: 8, Right: 8, Top: 4, Bottom: 4);
+        FlexWeight: 1;
+        Anchor: (Height: 28);
+        OutlineColor: #3a4a6a;
+        OutlineSize: 1;
+
+        TextField #SearchInput {
+          Style: (FontSize: 13, TextColor: #ffffff);
+          FlexWeight: 1;
+        }
+      }
+    }
+    
+    // === Player List ===
+    Group #PlayerListContainer {
+      LayoutMode: TopScrolling;
+      Background: (Color: #0f1525);
+      FlexWeight: 1;
+      Anchor: (Bottom: 6);
+      Padding: (Top: 6, Bottom: 6, Left: 10, Right: 10);
+      OutlineColor: #3a4a6a;
+      OutlineSize: 1;
+      
+      Group #PlayerList {
+        LayoutMode: Top;
+      }
+    }
+    
+    // === Amount Input ===
+    Group #AmountSection {
+      LayoutMode: Top;
+      Anchor: (Bottom: 6);
+      
+      Label #AmountLabel {
+        Text: "Amount";
+        Style: (FontSize: 11, TextColor: #aaaaaa);
+        Anchor: (Bottom: 4);
+      }
+      
+      Group #AmountInputBox {
+        Background: (Color: #0f1525);
+        Padding: (Left: 8, Right: 8, Top: 4, Bottom: 4);
+        Anchor: (Height: 28);
+        OutlineColor: #3a4a6a;
+        OutlineSize: 1;
+
+        TextField #AmountInput {
+          Style: (FontSize: 13, TextColor: #ffffff);
+          FlexWeight: 1;
+        }
+      }
+    }
+    
+    // === Fee Preview ===
+    Group #FeeSection {
+      LayoutMode: Left;
+      Anchor: (Height: 16, Bottom: 6);
+      
+      Group #FeeLeft {
+        LayoutMode: Left;
+        FlexWeight: 1;
+        
+        Label #FeeLabel {
+          Text: "Transfer Fee";
+          Style: (FontSize: 11, TextColor: #666666);
+          Anchor: (Vertical: 0);
+        }
+      }
+      
+      Group #FeeRight {
+        LayoutMode: Right;
+        Anchor: (Width: 80, Vertical: 0);
+        
+        Label #FeeValue {
+          Text: "$0.00";
+          Style: (FontSize: 11, TextColor: #FF8800, RenderBold: true);
+          Anchor: (Vertical: 0);
+        }
+      }
+    }
+    
+    // === Balance After Preview ===
+    Group #BalanceAfterSection {
+      LayoutMode: Left;
+      Anchor: (Height: 16, Bottom: 6);
+      
+      Group #BalAfterLeft {
+        LayoutMode: Left;
+        FlexWeight: 1;
+        
+        Label #BalAfterLabel {
+          Text: "Balance After";
+          Style: (FontSize: 11, TextColor: #666666);
+          Anchor: (Vertical: 0);
+        }
+      }
+      
+      Group #BalAfterRight {
+        LayoutMode: Right;
+        Anchor: (Width: 80, Vertical: 0);
+        
+        Label #BalanceAfterValue {
+          Text: "$0.00";
+          Style: (FontSize: 11, TextColor: #32CD32, RenderBold: true);
+          Anchor: (Vertical: 0);
+        }
+      }
+    }
+    
+    // === Confirm Button ===
+    TextButton #ConfirmButton {
+      Text: "SEND PAYMENT";
+      Style: $E.@EcoButtonGreenStyle;
+      Anchor: (Height: 34);
+    }
+  }
+}

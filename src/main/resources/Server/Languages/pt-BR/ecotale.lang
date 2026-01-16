@@ -1,0 +1,147 @@
+# Ecotale Economy Plugin - Traduções em Português (Brasil)
+# Format: key=value
+
+# ========== Commands - Balance ==========
+balance.header=Seu Saldo
+balance.current=Saldo Atual: {0}
+balance.earned=Total Ganho: {0}
+balance.spent=Total Gasto: {0}
+
+# ========== Commands - Pay ==========
+pay.success=Enviou {0} para {1}
+pay.received=Recebeu {0} de {1}
+pay.fee=Taxa de transferência: {0}
+pay.insufficient=Saldo insuficiente
+pay.invalid_amount=Valor inválido
+pay.player_not_found=Jogador não encontrado
+pay.self=Você não pode pagar a si mesmo
+pay.minimum=Transação mínima é {0}
+
+# ========== Commands - Admin ==========
+admin.give=Deu {0} para {1}
+admin.take=Tirou {0} de {1}
+admin.set=Definiu o saldo de {1} para {0}
+admin.reset=Resetou o saldo de {0}
+admin.save=Dados da economia salvos!
+admin.reload=Configuração recarregada!
+admin.no_data=Nenhum saldo encontrado
+
+# ========== Commands - Top ==========
+top.header=Maiores Saldos
+top.entry=#{0} {1} - {2}
+top.empty=Nenhum saldo para exibir
+
+# ========== GUI - Admin Panel ==========
+gui.admin.title=Painel de Administração
+gui.admin.tab.dashboard=INÍCIO
+gui.admin.tab.players=JOGADORES
+gui.admin.tab.top=TOP
+gui.admin.tab.log=LOG
+gui.admin.tab.config=CONFIG
+gui.admin.force_save=SALVAR
+gui.admin.close=X
+
+# ========== GUI - Dashboard ==========
+gui.dashboard.economy_stats=Estatísticas da Economia
+gui.dashboard.total_circulating=Total em Circulação
+gui.dashboard.total_players=Jogadores com Saldo
+gui.dashboard.total_money=Dinheiro Total
+gui.dashboard.avg_balance=Saldo Médio
+gui.dashboard.current_config=Configuração Atual
+gui.dashboard.recent_activity=Atividade Recente
+gui.dashboard.no_activity=Sem atividade recente
+
+# ========== GUI - Players Tab ==========
+gui.players.search=Buscar...
+gui.players.search_label=Buscar
+gui.players.select_player=Selecionar
+gui.players.amount=Valor:
+gui.players.give=+
+gui.players.take=-
+gui.players.set=SET
+gui.players.reset=RESET
+gui.players.reset_confirm=OK?
+gui.players.balance=Saldo: {0}
+gui.players.online=Online
+gui.players.offline=Offline
+gui.players.no_players=Sem jogadores
+
+# ========== GUI - Top Tab ==========
+gui.top.title=Top 10 Saldos
+gui.top.rank=#{0}
+gui.top.no_data=Sem dados disponíveis
+
+# ========== GUI - Log Tab ==========
+gui.log.filter=Filtrar por nome...
+gui.log.no_entries=Sem transações
+gui.log.requires_h2=Log requer armazenamento H2
+gui.log.page=Página {0} de {1}
+
+# ========== GUI - Config Tab ==========
+gui.config.title=Configuração
+gui.config.reload=RECARREGAR
+gui.config.save=SAVE
+gui.config.saved=Salvo!
+gui.config.reset_defaults=RESET
+gui.config.currency=Moeda
+gui.config.symbol=Símbolo:
+gui.config.name=Nome:
+gui.config.limits=Limites de Saldo
+gui.config.starting=Inicial:
+gui.config.max=Máximo:
+gui.config.transactions=Transações
+gui.config.fee=Taxa:
+gui.config.min=Mínimo:
+gui.config.display=Exibição
+gui.config.hud=Mostrar HUD:
+gui.config.decimals=Decimais:
+gui.config.language=Idioma
+gui.config.lang=Idioma:
+gui.config.per_player=Usar Idioma do Jogador:
+gui.config.yes=Sim
+gui.config.no=Não
+
+# ========== GUI - Pay Panel ==========
+gui.pay.title=Enviar Pagamento
+gui.pay.your_balance_label=Seu Saldo
+gui.pay.search=Buscar
+gui.pay.amount=Valor
+gui.pay.fee_label=Taxa de Transferência
+gui.pay.no_players=Nenhum jogador online
+gui.pay.recipient=Destinatário:
+gui.pay.your_balance=Seu Saldo: {0}
+gui.pay.send=ENVIAR
+gui.pay.cancel=CANCELAR
+
+# ========== HUD ==========
+hud.balance=Saldo: {0}
+
+# ========== Validação ==========
+error.invalid_amount=Valor inválido
+error.max_exceeded=Valor excede o máximo ({0})
+error.select_player=Selecione um jogador primeiro
+error.no_permission=Você não tem permissão
+
+# ========== Feedback de Ações ==========
+action.data_saved=Dados da economia salvos!
+action.config_reloaded=Configuração recarregada!
+action.config_saved=Configuração salva!
+action.config_reset=Config redefinida!
+action.hud_enabled=HUD: Ativado
+action.hud_disabled=HUD: Desativado
+action.language_changed=Idioma: {0}
+action.per_player_enabled=Idioma por jogador: Ativado
+action.per_player_disabled=Idioma por jogador: Desativado
+action.gave=Deu {0} para {1}
+action.took=Tirou {0} de {1}
+action.set=Definiu {0} para {1}
+action.reset=Redefiniu {0} para {1}
+action.failed_insufficient=Falhou - saldo insuficiente
+
+# ========== Feedback de Pagamentos ==========
+pay.select_player=Selecione um jogador primeiro
+pay.enter_amount=Digite um valor válido
+pay.payment_sent=Pagamento enviado!
+pay.fee_notice=(Taxa: {0})
+pay.balance_after=Saldo Depois
+

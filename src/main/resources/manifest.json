@@ -1,0 +1,20 @@
+{
+  "Group": "michiweon",
+  "Name": "Ecotale",
+  "Version": "1.0.0",
+  "Description": "Economy plugin for Hytale with balance HUD display",
+  "Authors": [
+    {
+      "Name": "michiweon"
+    }
+  ],
+  "Website": "https://github.com/michiweon/ecotale",
+  "ServerVersion": "*",
+  "Dependencies": {
+    "Hytale:EntityModule": "*"
+  },
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "Main": "com.ecotale.Main",
+  "IncludesAssetPack": true
+}
