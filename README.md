@@ -68,6 +68,11 @@ Player-to-player payment interface
 | `/eco set <player> <amount>` | Set balance | Admin |
 | `/eco reset <player>` | Reset to starting balance | Admin |
 
+## Permissions
+| Permission | Description |
+|------------|-------------|
+| `michiweon.ecotale.command.eco` | Access to /eco admin commands |
+
 ## Configuration
 
 Located in `mods/michiweon_Ecotale/Ecotale.json`:
@@ -88,11 +93,11 @@ Located in `mods/michiweon_Ecotale/Ecotale.json`:
 
 ### Storage Providers
 
-| Provider | Use Case |
-|----------|----------|
-| `h2` | Default, single server, fastest |
-| `json` | Human-readable files, debugging |
-| `mysql` | Shared database across servers |
+| Provider |
+|----------|
+| `h2` | 
+| `json` | 
+| `mysql` | 
 
 ## Supported Languages
 
