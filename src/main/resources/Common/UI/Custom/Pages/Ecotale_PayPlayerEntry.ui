@@ -1,0 +1,27 @@
+$E = "Ecotale_Common.ui";
+
+Button #PlayerEntry {
+  LayoutMode: Left;
+  Background: (Color: #1a2a4a);
+  Padding: (Top: 8, Bottom: 8, Left: 12, Right: 12);
+  Anchor: (Left: 0, Right: 0, Height: 36, Bottom: 4);
+  
+  Label #PlayerName {
+    Text: "PlayerName";
+    Style: (FontSize: 13, TextColor: #ffffff, RenderBold: true);
+    FlexWeight: 1;
+    Anchor: (Vertical: 0);
+  }
+  
+  Label #SelectedIcon {
+    Text: "[Selected]";
+    Style: (FontSize: 11, TextColor: #32CD32, RenderBold: true);
+    Anchor: (Vertical: 0, Right: 8);
+    Visible: false;
+  }
+  
+  Group #OnlineIcon {
+    Background: (Color: #32CD32);
+    Anchor: (Width: 8, Height: 8, Vertical: 0);
+  }
+}

@@ -1,0 +1,29 @@
+$E = "Ecotale_Common.ui";
+
+Button #PlayerEntry {
+  LayoutMode: Left;
+  Background: (Color: #1a2a4a);
+  Padding: (Top: 8, Bottom: 8, Left: 12, Right: 12);
+  Anchor: (Left: 0, Right: 0, Height: 36, Bottom: 2);
+  
+  // Selection indicator (hidden by default)
+  Group #SelectionIndicator {
+    Background: (Color: #FFD700);
+    Anchor: (Width: 3, Left: 0, Top: 0, Bottom: 0);
+    Visible: false;
+  }
+  
+  Label #PlayerName {
+    Text: "PlayerName";
+    Style: (FontSize: 13, TextColor: #ffffff, RenderBold: true);
+    FlexWeight: 1;
+    Anchor: (Vertical: 0, Left: 8);
+  }
+  
+  Label #PlayerBalance {
+    Text: "$0.00";
+    Style: (FontSize: 13, TextColor: #32CD32, RenderBold: true);
+    Anchor: (Width: 120, Vertical: 0);
+  }
+}
+

@@ -1,0 +1,38 @@
+Group #BalancePanel {
+  Anchor: (Right: 0, Bottom: 152, Width: 180, Height: 28);
+  Background: (Color: #1a1e2dd8);
+  Padding: (Left: 10, Right: 10, Top: 4, Bottom: 4);
+  LayoutMode: Left;
+  
+  Label #CurrencyName {
+    Text: "";
+    Style: (
+      FontSize: 14,
+      TextColor: #888888,
+      VerticalAlignment: Center
+    );
+    Padding: (Right: 8);
+    Anchor: (Vertical: 0);
+  }
+  
+  Label #BalanceSymbol {
+    Text: "$";
+    Style: (
+      FontSize: 16,
+      TextColor: #e8b923,
+      VerticalAlignment: Center
+    );
+    Padding: (Right: 2);
+    Anchor: (Vertical: 0);
+  }
+  
+  Label #BalanceAmount {
+    Text: "0.00";
+    Style: (
+      FontSize: 16,
+      TextColor: #ffffff,
+      VerticalAlignment: Center
+    );
+    Anchor: (Vertical: 0);
+  }
+}

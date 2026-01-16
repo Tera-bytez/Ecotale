@@ -1,0 +1,146 @@
+# Ecotale Economy Plugin - Русский (Russian)
+# Format: key=value
+
+# ========== Commands - Balance ==========
+balance.header=Баланс
+balance.current=Текущий баланс: {0}
+balance.earned=Всего заработано: {0}
+balance.spent=Всего потрачено: {0}
+
+# ========== Commands - Pay ==========
+pay.success=Отправлено {0} игроку {1}
+pay.received=Получено {0} от {1}
+pay.fee=Комиссия: {0}
+pay.insufficient=Недостаточно средств
+pay.invalid_amount=Неверная сумма
+pay.player_not_found=Игрок не найден
+pay.self=Нельзя платить себе
+pay.minimum=Минимум {0}
+
+# ========== Commands - Admin ==========
+admin.give=Выдано {0} игроку {1}
+admin.take=Снято {0} у {1}
+admin.set=Баланс {1} установлен на {0}
+admin.reset=Баланс {0} сброшен
+admin.save=Данные сохранены!
+admin.reload=Конфиг перезагружен!
+admin.no_data=Нет данных
+
+# ========== Commands - Top ==========
+top.header=Топ балансов
+top.entry=#{0} {1} - {2}
+top.empty=Нет данных
+
+# ========== GUI - Admin Panel ==========
+gui.admin.title=Панель управления
+gui.admin.tab.dashboard=Обзор
+gui.admin.tab.players=Игроки
+gui.admin.tab.top=TOP
+gui.admin.tab.log=Лог
+gui.admin.tab.config=Настройки
+gui.admin.force_save=SAVE
+gui.admin.close=X
+
+# ========== GUI - Dashboard ==========
+gui.dashboard.economy_stats=Статистика
+gui.dashboard.total_circulating=В обороте
+gui.dashboard.total_players=Игроков
+gui.dashboard.total_money=Всего денег
+gui.dashboard.avg_balance=Средний баланс
+gui.dashboard.current_config=Текущие настройки
+gui.dashboard.recent_activity=Активность
+gui.dashboard.no_activity=Нет активности
+
+# ========== GUI - Players Tab ==========
+gui.players.search=Поиск...
+gui.players.search_label=Поиск
+gui.players.select_player=Выбрать
+gui.players.amount=Сумма:
+gui.players.give=+
+gui.players.take=-
+gui.players.set=SET
+gui.players.reset=RESET
+gui.players.reset_confirm=OK?
+gui.players.balance=Баланс: {0}
+gui.players.online=Онлайн
+gui.players.offline=Оффлайн
+gui.players.no_players=Нет игроков
+
+# ========== GUI - Top Tab ==========
+gui.top.title=ТОП 10
+gui.top.rank=#{0}
+gui.top.no_data=Нет данных
+
+# ========== GUI - Log Tab ==========
+gui.log.filter=Поиск...
+gui.log.no_entries=Нет записей
+gui.log.requires_h2=Требуется H2
+gui.log.page=Стр. {0}/{1}
+
+# ========== GUI - Config Tab ==========
+gui.config.title=Настройки
+gui.config.reload=RELOAD
+gui.config.save=SAVE
+gui.config.saved=Сохранено!
+gui.config.reset_defaults=RESET
+gui.config.currency=Валюта
+gui.config.symbol=Символ:
+gui.config.name=Название:
+gui.config.limits=Лимиты
+gui.config.starting=Начальный:
+gui.config.max=Макс:
+gui.config.transactions=Переводы
+gui.config.fee=Комиссия:
+gui.config.min=Мин:
+gui.config.display=Отображение
+gui.config.hud=HUD:
+gui.config.decimals=Десятичные:
+gui.config.language=Язык
+gui.config.lang=Язык:
+gui.config.per_player=По игрокам:
+gui.config.yes=Да
+gui.config.no=Нет
+
+# ========== GUI - Pay Panel ==========
+gui.pay.title=Перевод
+gui.pay.your_balance_label=Баланс
+gui.pay.search=Поиск
+gui.pay.amount=Сумма
+gui.pay.fee_label=Комиссия
+gui.pay.no_players=Нет онлайн
+gui.pay.recipient=Получатель:
+gui.pay.your_balance=Баланс: {0}
+gui.pay.send=Отправить
+gui.pay.cancel=Отмена
+
+# ========== HUD ==========
+hud.balance=Баланс: {0}
+
+# ========== Validation ==========
+error.invalid_amount=Неверная сумма
+error.max_exceeded=Превышен лимит ({0})
+error.select_player=Выберите игрока
+error.no_permission=Нет доступа
+
+# ========== Action Feedback ==========
+action.data_saved=Сохранено!
+action.config_reloaded=Перезагружено!
+action.config_saved=Сохранено!
+action.config_reset=Сброшено!
+action.hud_enabled=HUD: ВКЛ
+action.hud_disabled=HUD: ВЫКЛ
+action.language_changed=Язык: {0}
+action.per_player_enabled=По игрокам: ВКЛ
+action.per_player_disabled=По игрокам: ВЫКЛ
+action.gave=+{0} игроку {1}
+action.took=-{0} у {1}
+action.set={0} = {1}
+action.reset=Сброс {0} на {1}
+action.failed_insufficient=Ошибка - нет средств
+
+# ========== Pay Feedback ==========
+pay.select_player=Выберите игрока
+pay.enter_amount=Введите сумму
+pay.payment_sent=Отправлено!
+pay.fee_notice=(комиссия: {0})
+pay.balance_after=После перевода

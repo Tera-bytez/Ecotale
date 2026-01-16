@@ -1,0 +1,645 @@
+$E = "Ecotale_Common.ui";
+
+Group #AdminRoot {
+  Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+  LayoutMode: Center;
+
+  Group #AdminCard {
+    Anchor: (Width: 640, Height: 480);
+    Background: (Color: #1a1a2eee);
+    LayoutMode: Top;
+    OutlineColor: #3a4a6a;
+    OutlineSize: 1;
+  
+    // === Header ===
+    Group #Header {
+      LayoutMode: Left;
+      Background: (Color: #0f1525);
+      Padding: (Top: 12, Bottom: 12, Left: 16, Right: 16);
+      Anchor: (Height: 48);
+      
+      Label #Title {
+        Text: "Economy Admin Panel";
+        Style: (FontSize: 18, TextColor: #FFD700, RenderBold: true);
+        FlexWeight: 1;
+        Anchor: (Vertical: 0);
+      }
+      
+      TextButton #ForceSaveButton {
+        Text: "FORCE SAVE";
+        Style: $E.@EcoButtonStyle;
+        Anchor: (Width: 100, Height: 28, Right: 8);
+      }
+      
+      TextButton #CloseButton {
+        Text: "X";
+        Style: $E.@EcoButtonRedStyle;
+        Anchor: (Width: 28, Height: 28);
+      }
+    }
+    
+    // === Tab Navigation ===
+    Group #TabNav {
+      LayoutMode: Left;
+      Padding: (Left: 16, Right: 16, Top: 8, Bottom: 8);
+      Anchor: (Height: 40);
+      
+      TextButton #TabDashboard {
+        Text: "DASHBOARD";
+        Style: $E.@EcoButtonStyle;
+        Anchor: (Width: 100, Height: 28, Right: 8);
+      }
+      
+      TextButton #TabPlayers {
+        Text: "PLAYERS";
+        Style: $E.@EcoButtonStyle;
+        Anchor: (Width: 100, Height: 28, Right: 8);
+      }
+      
+      TextButton #TabTop {
+        Text: "TOP 10";
+        Style: $E.@EcoButtonStyle;
+        Anchor: (Width: 80, Height: 28, Right: 8);
+      }
+      
+      TextButton #TabLog {
+        Text: "LOG";
+        Style: $E.@EcoButtonStyle;
+        Anchor: (Width: 60, Height: 28, Right: 8);
+      }
+      
+      TextButton #TabConfig {
+        Text: "CONFIG";
+        Style: $E.@EcoButtonStyle;
+        Anchor: (Width: 80, Height: 28);
+      }
+    }
+    
+    // === Dashboard Tab Content ===
+    Group #DashboardContent {
+      LayoutMode: Top;
+      Padding: (Top: 12, Left: 16, Right: 16, Bottom: 16);
+      FlexWeight: 1;
+      
+      // Stats Row
+      Group #StatsRow {
+        LayoutMode: Left;
+        Anchor: (Height: 70, Bottom: 12);
+        
+        // Total Circulating
+        Group #StatCard1 {
+          LayoutMode: Top;
+          Background: (Color: #0f1525);
+          Padding: (Top: 10, Bottom: 10, Left: 12, Right: 12);
+          FlexWeight: 1;
+          Anchor: (Right: 8);
+          OutlineColor: #3a4a6a;
+          OutlineSize: 1;
+          
+          Label #LblTotalCirculating {
+            Text: "Total Circulating";
+            Style: (FontSize: 10, TextColor: #888888);
+          }
+          Label #TotalCirculating {
+            Text: "$0.00";
+            Style: (FontSize: 20, TextColor: #32CD32, RenderBold: true);
+          }
+        }
+        
+        // Total Players
+        Group #StatCard2 {
+          LayoutMode: Top;
+          Background: (Color: #0f1525);
+          Padding: (Top: 10, Bottom: 10, Left: 12, Right: 12);
+          FlexWeight: 1;
+          Anchor: (Right: 8);
+          OutlineColor: #3a4a6a;
+          OutlineSize: 1;
+          
+          Label #LblPlayersWithBalance {
+            Text: "Players with Balance";
+            Style: (FontSize: 10, TextColor: #888888);
+          }
+          Label #TotalPlayers {
+            Text: "0";
+            Style: (FontSize: 20, TextColor: #FFD700, RenderBold: true);
+          }
+        }
+        
+        // Average Balance
+        Group #StatCard3 {
+          LayoutMode: Top;
+          Background: (Color: #0f1525);
+          Padding: (Top: 10, Bottom: 10, Left: 12, Right: 12);
+          FlexWeight: 1;
+          OutlineColor: #3a4a6a;
+          OutlineSize: 1;
+          
+          Label #LblAverageBalance {
+            Text: "Average Balance";
+            Style: (FontSize: 10, TextColor: #888888);
+          }
+          Label #AverageBalance {
+            Text: "$0.00";
+            Style: (FontSize: 20, TextColor: #5599FF, RenderBold: true);
+          }
+        }
+      }
+      
+      // Config Info
+      Group #ConfigInfo {
+        LayoutMode: Top;
+        Background: (Color: #0f1525);
+        Padding: (Top: 10, Bottom: 10, Left: 12, Right: 12);
+        Anchor: (Height: 60, Bottom: 8);
+        OutlineColor: #3a4a6a;
+        OutlineSize: 1;
+        
+        Label #LblCurrentConfig {
+          Text: "Current Configuration";
+          Style: (FontSize: 12, TextColor: #FFD700, RenderBold: true);
+          Anchor: (Bottom: 8);
+        }
+        
+        Group {
+          LayoutMode: Left;
+          
+          Label { Text: "Max Balance: "; Style: (FontSize: 11, TextColor: #888888); }
+          Label #ConfigMaxBalance { Text: "$1.0B"; Style: (FontSize: 11, TextColor: #ffffff, RenderBold: true); Anchor: (Right: 24); }
+          
+          Label { Text: "Transfer Fee: "; Style: (FontSize: 11, TextColor: #888888); }
+          Label #ConfigTransferFee { Text: "5.0%"; Style: (FontSize: 11, TextColor: #ffffff, RenderBold: true); Anchor: (Right: 24); }
+          
+          Label { Text: "Auto-Save: "; Style: (FontSize: 11, TextColor: #888888); }
+          Label #ConfigAutoSave { Text: "5 min"; Style: (FontSize: 11, TextColor: #ffffff, RenderBold: true); }
+        }
+      }
+      
+      // Activity Log
+      Group #ActivityLogSection {
+        LayoutMode: Top;
+        Background: (Color: #0f1525);
+        Padding: (Top: 10, Bottom: 10, Left: 12, Right: 12);
+        FlexWeight: 1;
+        OutlineColor: #3a4a6a;
+        OutlineSize: 1;
+        
+        Label #LblRecentActivity {
+          Text: "Recent Activity";
+          Style: (FontSize: 12, TextColor: #FFD700, RenderBold: true);
+          Anchor: (Bottom: 8);
+        }
+        
+        Group #ActivityLogContainer {
+          LayoutMode: TopScrolling;
+          FlexWeight: 1;
+          
+          Group #ActivityLog {
+            LayoutMode: Top;
+          }
+        }
+      }
+    }
+    
+    // === Players Tab Content ===
+    Group #PlayersContent {
+      LayoutMode: Top;
+      Padding: (Top: 12, Left: 16, Right: 16, Bottom: 16);
+      FlexWeight: 1;
+      Visible: false;
+      
+      // Search bar
+      Group #SearchBar {
+        LayoutMode: Top;
+        Anchor: (Bottom: 8);
+        
+        Label #LblSearch {
+          Text: "Search";
+          Style: (FontSize: 11, TextColor: #aaaaaa);
+          Anchor: (Bottom: 4);
+        }
+        
+        Group #PlayerSearchBox {
+          Background: (Color: #0f1525);
+          Padding: (Left: 8, Right: 8, Top: 4, Bottom: 4);
+          Anchor: (Height: 28);
+          OutlineColor: #3a4a6a;
+          OutlineSize: 1;
+
+          TextField #PlayerSearch {
+            Style: (FontSize: 13, TextColor: #ffffff);
+            FlexWeight: 1;
+          }
+        }
+      }
+      
+      // Pagination Controls
+      Group #PaginationBar {
+        LayoutMode: Left;
+        Anchor: (Height: 28, Bottom: 4);
+        
+        TextButton #PrevPageButton {
+          Text: "< Prev";
+          Style: $E.@EcoButtonStyle;
+          Anchor: (Width: 60, Height: 24, Vertical: 0);
+        }
+        
+        Label #PageInfo {
+          Text: "Page 1 of 1";
+          Style: (FontSize: 11, TextColor: #888888, HorizontalAlignment: Center);
+          FlexWeight: 1;
+          Anchor: (Vertical: 0);
+        }
+        
+        TextButton #NextPageButton {
+          Text: "Next >";
+          Style: $E.@EcoButtonStyle;
+          Anchor: (Width: 60, Height: 24, Vertical: 0);
+        }
+      }
+      
+      // Column Headers (simplified - no Actions column)
+      Group #PlayerHeaders {
+        LayoutMode: Left;
+        Background: (Color: #0f1525);
+        Padding: (Top: 6, Bottom: 6, Left: 12, Right: 12);
+        Anchor: (Height: 28, Bottom: 4);
+        
+        Label { Text: "Player"; Style: (FontSize: 11, TextColor: #888888, RenderBold: true); FlexWeight: 1; }
+        Label { Text: "Balance"; Style: (FontSize: 11, TextColor: #888888, RenderBold: true); Anchor: (Width: 120); }
+      }
+      
+      // Player List Container (scrollable)
+      Group #PlayerListContainer {
+        LayoutMode: TopScrolling;
+        Background: (Color: #0f1525);
+        FlexWeight: 1;
+        Padding: (Top: 4, Bottom: 4, Left: 12, Right: 12);
+        OutlineColor: #3a4a6a;
+        OutlineSize: 1;
+        
+        Group #PlayerList {
+          LayoutMode: Top;
+        }
+      }
+      
+      // === Action Panel (at bottom) ===
+      Group #ActionPanel {
+        LayoutMode: Left;
+        Background: (Color: #0f1525);
+        Padding: (Top: 10, Bottom: 10, Left: 12, Right: 12);
+        Anchor: (Height: 50, Top: 8);
+        OutlineColor: #3a4a6a;
+        OutlineSize: 1;
+        
+        // Selected player info
+        Group #SelectedInfo {
+          LayoutMode: Top;
+          FlexWeight: 1;
+          Anchor: (Vertical: 0);
+          
+          Label #SelectedLabel {
+            Text: "Select a player";
+            Style: (FontSize: 11, TextColor: #888888);
+          }
+          Label #SelectedName {
+            Text: "";
+            Style: (FontSize: 13, TextColor: #FFD700, RenderBold: true);
+          }
+        }
+        
+        // Amount input
+        Label #LblAmount {
+          Text: "Amount:";
+          Style: (FontSize: 11, TextColor: #aaaaaa);
+          Anchor: (Right: 8, Vertical: 0);
+        }
+        
+        Group #AmountInputBox {
+          Background: (Color: #1a2a4a);
+          Padding: (Left: 8, Right: 8, Top: 2, Bottom: 2);
+          Anchor: (Width: 100, Height: 28, Right: 12, Vertical: 0);
+          OutlineColor: #3a4a6a;
+          OutlineSize: 1;
+          
+          TextField #ActionAmount {
+            Style: (FontSize: 13, TextColor: #ffffff);
+            FlexWeight: 1;
+          }
+        }
+        
+        // Action Buttons
+        TextButton #GiveButton {
+          Text: "GIVE";
+          Style: $E.@EcoButtonGreenStyle;
+          Anchor: (Width: 54, Height: 28, Right: 6, Vertical: 0);
+        }
+        
+        TextButton #TakeButton {
+          Text: "TAKE";
+          Style: $E.@EcoButtonRedStyle;
+          Anchor: (Width: 54, Height: 28, Right: 6, Vertical: 0);
+        }
+        
+        TextButton #SetButton {
+          Text: "SET";
+          Style: $E.@EcoButtonStyle;
+          Anchor: (Width: 48, Height: 28, Right: 6, Vertical: 0);
+        }
+        
+        TextButton #ResetButton {
+          Text: "RESET";
+          Style: $E.@EcoButtonStyle;
+          Anchor: (Width: 54, Height: 28, Vertical: 0);
+        }
+      }
+    }
+    
+    // === Top Tab Content ===
+    Group #TopContent {
+      LayoutMode: Top;
+      Padding: (Top: 12, Left: 16, Right: 16, Bottom: 16);
+      FlexWeight: 1;
+      Visible: false;
+      
+      Label {
+        Text: "Top 10 Balances";
+        Style: (FontSize: 14, TextColor: #FFD700, RenderBold: true);
+        Anchor: (Bottom: 8);
+      }
+      
+      // Headers
+      Group #TopHeaders {
+        LayoutMode: Left;
+        Background: (Color: #0f1525);
+        Padding: (Top: 6, Bottom: 6, Left: 12, Right: 12);
+        Anchor: (Height: 28, Bottom: 4);
+        
+      Label { Text: "#"; Style: (FontSize: 11, TextColor: #888888, RenderBold: true); Anchor: (Width: 36); }
+      Label { Text: "Player"; Style: (FontSize: 11, TextColor: #888888, RenderBold: true); FlexWeight: 1; }
+      Label { Text: "Balance"; Style: (FontSize: 11, TextColor: #888888, RenderBold: true); Anchor: (Width: 140); }
+      }
+      
+      // Top List Container
+      Group #TopListContainer {
+        LayoutMode: TopScrolling;
+        Background: (Color: #0f1525);
+        FlexWeight: 1;
+      Padding: (Top: 4, Bottom: 4, Left: 12, Right: 12);
+        OutlineColor: #3a4a6a;
+        OutlineSize: 1;
+        
+        Group #TopList {
+          LayoutMode: Top;
+        }
+      }
+    }
+    
+    // === Log Tab Content ===
+    Group #LogContent {
+      LayoutMode: Top;
+      Padding: (Top: 12, Left: 16, Right: 16, Bottom: 16);
+      FlexWeight: 1;
+      Visible: false;
+      
+      // Header with filter
+      Group #LogHeader {
+        LayoutMode: Left;
+        Anchor: (Height: 32, Bottom: 8);
+        
+        Label {
+          Text: "Transaction History";
+          Style: (FontSize: 14, TextColor: #FFD700, RenderBold: true);
+          FlexWeight: 1;
+          Anchor: (Vertical: 0);
+        }
+        
+        Label {
+          Text: "Filter:";
+          Style: (FontSize: 11, TextColor: #aaaaaa);
+          Anchor: (Right: 8, Vertical: 0);
+        }
+        
+        Group #LogFilterBox {
+          Background: (Color: #0f1525);
+          Padding: (Left: 8, Right: 8, Top: 4, Bottom: 4);
+          Anchor: (Width: 150, Height: 28, Vertical: 0);
+          OutlineColor: #3a4a6a;
+          OutlineSize: 1;
+          
+          TextField #LogFilter {
+            Style: (FontSize: 12, TextColor: #ffffff);
+            FlexWeight: 1;
+          }
+        }
+      }
+      
+      // Log count info
+      Label #LogCountInfo {
+        Text: "Showing 0 of 0 entries";
+        Style: (FontSize: 10, TextColor: #888888);
+        Anchor: (Bottom: 4);
+      }
+      
+      // Log List Container
+      Group #LogListContainer {
+        LayoutMode: TopScrolling;
+        Background: (Color: #0f1525);
+        FlexWeight: 1;
+        Padding: (Top: 4, Bottom: 4, Left: 12, Right: 12);
+        OutlineColor: #3a4a6a;
+        OutlineSize: 1;
+        
+          Group #LogList {
+          LayoutMode: Top;
+        }
+      }
+    }
+    
+    // === Config Tab Content ===
+    Group #ConfigContent {
+      LayoutMode: Top;
+      Padding: (Top: 12, Left: 16, Right: 16, Bottom: 16);
+      FlexWeight: 1;
+      Visible: false;
+      
+      // Reload button at top
+      Group #ConfigHeader {
+        LayoutMode: Left;
+        Anchor: (Height: 36);
+        Padding: (Bottom: 12);
+        
+        TextButton #ReloadConfigButton {
+          Text: "RELOAD CONFIG";
+          Style: $E.@EcoButtonStyle;
+          Anchor: (Width: 140, Height: 28);
+        }
+        
+        Label #ConfigStatus {
+          Text: "";
+          Style: (FontSize: 12, TextColor: #50c878);
+          Anchor: (Vertical: 0, Left: 16);
+        }
+      }
+      
+      // Scrollable config form
+      Group #ConfigFormContainer {
+        LayoutMode: TopScrolling;
+        Background: (Color: #0f1525);
+        FlexWeight: 1;
+        Padding: (Top: 12, Bottom: 12, Left: 16, Right: 16);
+        OutlineColor: #3a4a6a;
+        OutlineSize: 1;
+        
+        Group #ConfigForm {
+          LayoutMode: Top;
+          
+          // Currency Section
+          Label #LblCurrency { Text: "Currency"; Style: (FontSize: 14, TextColor: #FFD700, RenderBold: true); Padding: (Bottom: 8); }
+          
+          Group #CurrencyRow {
+            LayoutMode: Left;
+            Anchor: (Height: 32);
+            Padding: (Bottom: 8);
+            
+            Label { Text: "Symbol:"; Style: (FontSize: 12, TextColor: #aaaaaa); Anchor: (Width: 80, Vertical: 0); }
+            Group #CurrencySymbolBg {
+              Background: (Color: #2a3a5a);
+              Anchor: (Width: 60, Height: 24, Vertical: 0, Right: 16);
+              Padding: (Left: 8, Right: 8);
+              TextField #CurrencySymbolInput {
+                Style: (FontSize: 12, TextColor: #ffffff);
+                FlexWeight: 1;
+              }
+            }
+            
+            Label { Text: "Name:"; Style: (FontSize: 12, TextColor: #aaaaaa); Anchor: (Width: 60, Vertical: 0); }
+            Group #CurrencyNameBg {
+              Background: (Color: #2a3a5a);
+              Anchor: (Width: 120, Height: 24, Vertical: 0);
+              Padding: (Left: 8, Right: 8);
+              TextField #CurrencyNameInput {
+                Style: (FontSize: 12, TextColor: #ffffff);
+                FlexWeight: 1;
+              }
+            }
+          }
+          
+          // Balance Section
+          Label #LblLimits { Text: "Balance Limits"; Style: (FontSize: 14, TextColor: #FFD700, RenderBold: true); Padding: (Top: 8, Bottom: 8); }
+          
+          Group #BalanceRow {
+            LayoutMode: Left;
+            Anchor: (Height: 32);
+            Padding: (Bottom: 4);
+            
+            Label { Text: "Starting:"; Style: (FontSize: 12, TextColor: #aaaaaa); Anchor: (Width: 65, Vertical: 0); }
+            Group #StartingBalBg {
+              Background: (Color: #2a3a5a);
+              Anchor: (Width: 80, Height: 24, Vertical: 0, Right: 16);
+              Padding: (Left: 8, Right: 8);
+              TextField #StartingBalanceInput {
+                Style: (FontSize: 12, TextColor: #ffffff);
+                FlexWeight: 1;
+              }
+            }
+            
+            Label { Text: "Max:"; Style: (FontSize: 12, TextColor: #aaaaaa); Anchor: (Width: 40, Vertical: 0); }
+            Group #MaxBalBg {
+              Background: (Color: #2a3a5a);
+              Anchor: (Width: 100, Height: 24, Vertical: 0, Right: 16);
+              Padding: (Left: 8, Right: 8);
+              TextField #MaxBalanceInput {
+                Style: (FontSize: 12, TextColor: #ffffff);
+                FlexWeight: 1;
+              }
+            }
+            
+            Label { Text: "Fee:"; Style: (FontSize: 12, TextColor: #aaaaaa); Anchor: (Width: 35, Vertical: 0); }
+            Group #FeeBg {
+              Background: (Color: #2a3a5a);
+              Anchor: (Width: 45, Height: 24, Vertical: 0, Right: 4);
+              Padding: (Left: 6, Right: 6);
+              TextField #TransferFeeInput {
+                Style: (FontSize: 12, TextColor: #ffffff);
+                FlexWeight: 1;
+              }
+            }
+            Label { Text: "%"; Style: (FontSize: 12, TextColor: #888888); Anchor: (Width: 15, Vertical: 0); }
+          }
+          
+          // Display Section  
+          Label #LblDisplay { Text: "Display"; Style: (FontSize: 14, TextColor: #FFD700, RenderBold: true); Padding: (Top: 8, Bottom: 8); }
+          
+          Group #DisplayRow {
+            LayoutMode: Left;
+            Anchor: (Height: 32);
+            Padding: (Bottom: 8);
+            
+            Label { Text: "Enable HUD:"; Style: (FontSize: 12, TextColor: #aaaaaa); Anchor: (Width: 100, Vertical: 0); }
+            TextButton #HudToggle {
+              Text: "YES";
+              Style: $E.@EcoButtonStyle;
+              Anchor: (Width: 60, Height: 24, Right: 16);
+            }
+            
+            Label { Text: "Decimals:"; Style: (FontSize: 12, TextColor: #aaaaaa); Anchor: (Width: 80, Vertical: 0); }
+            Group #DecimalsBg {
+              Background: (Color: #2a3a5a);
+              Anchor: (Width: 50, Height: 24, Vertical: 0);
+              Padding: (Left: 8, Right: 8);
+              TextField #DecimalsInput {
+                Style: (FontSize: 12, TextColor: #ffffff);
+                FlexWeight: 1;
+              }
+            }
+          }
+          
+          // Language Section
+          Label #LblLanguage { Text: "Language"; Style: (FontSize: 14, TextColor: #FFD700, RenderBold: true); Padding: (Top: 8, Bottom: 8); }
+          
+          Group #LangRow {
+            LayoutMode: Left;
+            Anchor: (Height: 32);
+            Padding: (Bottom: 8);
+            
+            Label { Text: "Language:"; Style: (FontSize: 12, TextColor: #aaaaaa); Anchor: (Width: 80, Vertical: 0); }
+            TextButton #LangToggle {
+              Text: "en-US";
+              Style: $E.@EcoButtonStyle;
+              Anchor: (Width: 80, Height: 24, Right: 16);
+            }
+            
+            Label { Text: "Per Player:"; Style: (FontSize: 12, TextColor: #aaaaaa); Anchor: (Width: 80, Vertical: 0); }
+            TextButton #PerPlayerToggle {
+              Text: "NO";
+              Style: $E.@EcoButtonStyle;
+              Anchor: (Width: 60, Height: 24);
+            }
+          }
+        }
+      }
+      
+      // Save button at bottom
+      Group #ConfigFooter {
+        LayoutMode: Left;
+        Padding: (Top: 8, Left: 16, Right: 16);
+        Anchor: (Height: 44);
+        
+        TextButton #ResetDefaultsButton {
+          Text: "RESET DEFAULTS";
+          Style: $E.@EcoButtonRedStyle;
+          Anchor: (Width: 130, Height: 32, Right: 12);
+        }
+        
+        Label { FlexWeight: 1; }
+        
+        TextButton #SaveConfigButton {
+          Text: "SAVE CONFIG";
+          Style: $E.@EcoButtonAccentStyle;
+          Anchor: (Width: 130, Height: 32);
+        }
+      }
+    }
+  }
+}

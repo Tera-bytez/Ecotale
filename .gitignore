@@ -1,0 +1,41 @@
+# Build outputs
+build/
+bin/
+out/
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Gradle
+.gradle/
+gradle-app.setting
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Database files (local testing)
+*.mv.db
+*.trace.db
+*.db
+
+# Temp files
+*.tmp
+*.bak
+.tmp_*/
+
+# Debug/Development
+DEBUGGING_NOTES.md
+TODO.md
