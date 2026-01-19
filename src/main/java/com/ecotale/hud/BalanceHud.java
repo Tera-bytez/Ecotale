@@ -58,6 +58,14 @@ public class BalanceHud extends SimpleHud {
             return;
         }
         
+        // If animation is disabled, update instantly (safer for MultipleHUD compatibility)
+        if (!com.ecotale.Main.CONFIG.get().isEnableHudAnimation()) {
+            targetBalance = newBalance;
+            displayedBalance = newBalance;
+            updateDisplayFinal(newBalance);
+            return;
+        }
+        
         double change = Math.abs(newBalance - targetBalance);
         double ratio = targetBalance > 0 ? change / targetBalance : 1.0;
         

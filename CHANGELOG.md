@@ -2,6 +2,15 @@
 
 All notable changes to Ecotale will be documented in this file.
 
+## [1.0.2] - 2026-01-19
+
+### Fixed
+- **MultipleHUD crash fix** - HUD updates now use incremental `update()` instead of full `show()`
+  - Prevents crash when other mods' HUDs fail during MultipleHUD's build loop
+  - Adds defensive exception handling to prevent crash propagation
+
+---
+
 ## [1.0.1] - 2026-01-19
 
 ### Added

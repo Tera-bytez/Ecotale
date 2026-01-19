@@ -2,7 +2,7 @@
 
 A complete economy system plugin for Hytale servers with persistent storage, customizable HUD, and multi-language support.
 
-![Version](https://img.shields.io/badge/version-1.0.1-blue)
+![Version](https://img.shields.io/badge/version-1.0.2-blue)
 ![Author](https://img.shields.io/badge/author-Tera--bytez-purple)
 
 ## Screenshots
@@ -86,7 +86,7 @@ Earn currency through gameplay activities.
 
 ## Installation
 
-1. Download `Ecotale-1.0.1.jar`
+1. Download `Ecotale-1.0.2.jar`
 2. Place in your Hytale `mods/` folder
 3. Restart server
 
@@ -181,7 +181,7 @@ Located in `mods/Ecotale_Ecotale/Ecotale.json`:
 ./gradlew shadowJar
 ```
 
-Output: `build/libs/Ecotale-1.0.1.jar`
+Output: `build/libs/Ecotale-1.0.2.jar`
 
 ## API Usage
 

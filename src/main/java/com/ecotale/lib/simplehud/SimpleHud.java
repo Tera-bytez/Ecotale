@@ -142,12 +142,32 @@ public abstract class SimpleHud extends CustomUIHud {
 
     /**
      * Push all pending updates to the client.
+     * Uses incremental update to avoid triggering MultipleHUD's full rebuild.
      */
     public void pushUpdates() {
         try {
+            // Use incremental update instead of show() to avoid MultipleHUD crash
+            // MultipleHUD's build() throws RuntimeException if ANY HUD fails
+            UICommandBuilder builder = new UICommandBuilder();
+            for (Map.Entry<String, String> entry : values.entrySet()) {
+                builder.set(entry.getKey(), entry.getValue());
+            }
+            this.update(false, builder);
+        } catch (Exception e) {
+            // Catch ALL exceptions to prevent crash from propagating
+            LOGGER.log(Level.WARNING, "Failed to push HUD updates for path: " + uiPath + " - " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Force full rebuild of the HUD (use sparingly).
+     * This can trigger MultipleHUD issues with other mods.
+     */
+    public void forceFullRebuild() {
+        try {
             this.show();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to push HUD updates for path: " + uiPath, e);
+            LOGGER.log(Level.SEVERE, "Failed to rebuild HUD: " + uiPath, e);
         }
     }
 

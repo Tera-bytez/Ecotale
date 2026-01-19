@@ -70,6 +70,8 @@ public class EcotaleConfig {
         // HUD settings
         .append(new KeyedCodec<>("EnableHudDisplay", Codec.BOOLEAN),
             (c, v, e) -> c.enableHudDisplay = v, (c, e) -> c.enableHudDisplay).add()
+        .append(new KeyedCodec<>("EnableHudAnimation", Codec.BOOLEAN),
+            (c, v, e) -> c.enableHudAnimation = v, (c, e) -> c.enableHudAnimation).add()
         .append(new KeyedCodec<>("DecimalPlaces", Codec.INTEGER),
             (c, v, e) -> c.decimalPlaces = v, (c, e) -> c.decimalPlaces).add()
         
@@ -121,6 +123,7 @@ public class EcotaleConfig {
     
     // HUD
     private boolean enableHudDisplay = true;
+    private boolean enableHudAnimation = true; // Set false if HUD causes crashes with other mods
     private int decimalPlaces = 2;
     
     // Language - "en-US" or "es-ES", etc.
@@ -339,6 +342,19 @@ public class EcotaleConfig {
      * @param places Decimal places (0 for whole numbers, 2 for cents)
      */
     public void setDecimalPlaces(int places) { this.decimalPlaces = places; }
+    
+    /**
+     * Check if HUD animation is enabled.
+     * Disable for better stability with MultipleHUD and other HUD mods.
+     * @return true if animated balance counting is enabled
+     */
+    public boolean isEnableHudAnimation() { return enableHudAnimation; }
+    
+    /**
+     * Enable or disable HUD animation.
+     * @param enabled true for animated counting, false for instant updates
+     */
+    public void setEnableHudAnimation(boolean enabled) { this.enableHudAnimation = enabled; }
 
     // ========== Language Getters/Setters ==========
     
