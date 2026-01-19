@@ -55,6 +55,9 @@ public class Main extends JavaPlugin {
             CONFIG.get().getRateLimitRefill()
         );
         
+        // Check for MultipleHUD compatibility
+        com.ecotale.util.HudHelper.init();
+        
         // Register commands
         this.getCommandRegistry().registerCommand(new BalanceCommand());
         this.getCommandRegistry().registerCommand(new PayCommand());
@@ -78,7 +81,7 @@ public class Main extends JavaPlugin {
                 // Setup Balance HUD if enabled
                 if (Main.CONFIG.get().isEnableHudDisplay()) {
                     BalanceHud hud = new BalanceHud(playerRef);
-                    player.getHudManager().setCustomHud(playerRef, hud);
+                    com.ecotale.util.HudHelper.setCustomHud(player, playerRef, hud);
                     com.ecotale.systems.BalanceHudSystem.registerHud(playerRef.getUuid(), hud);
                 }
             }

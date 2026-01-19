@@ -20,7 +20,7 @@ if (EcotaleAPI.isAvailable()) {
 ```java
 // Check API version for compatibility
 int version = EcotaleAPI.getAPIVersion();  // Returns 2
-String pluginVersion = EcotaleAPI.getPluginVersion();  // Returns "1.0.0"
+String pluginVersion = EcotaleAPI.getPluginVersion();  // Returns "1.0.1"
 ```
 
 ---

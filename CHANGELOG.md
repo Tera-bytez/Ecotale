@@ -2,6 +2,16 @@
 
 All notable changes to Ecotale will be documented in this file.
 
+## [1.0.1] - 2026-01-19
+
+### Added
+- **MultipleHUD compatibility** - Optional support for the [MultipleHUD](https://www.curseforge.com/hytale/mods/multiplehud) mod
+  - Auto-detects MultipleHUD at runtime via reflection
+  - If present, uses its API to allow multiple HUDs to coexist
+  - Falls back gracefully to vanilla HUD if not installed
+
+---
+
 ## [1.0.0] - 2026-01-18
 
 ### First Release
