@@ -45,22 +45,37 @@ public interface PhysicalCoinsProvider {
     boolean canAfford(@Nonnull Player player, long amount);
     
     /**
+     * Check if coins can fit in player's inventory.
+     * Uses intelligent stacking calculation.
+     * 
+     * @param player Player entity
+     * @param amount Amount to check (in base units)
+     * @return Result with slots needed/available info
+     * @since 1.2.0
+     */
+    CoinOperationResult canFitAmount(@Nonnull Player player, long amount);
+    
+    /**
      * Give coins to player's inventory using optimal denomination.
+     * Pre-checks space before attempting to avoid partial failures.
      * 
      * @param player Player entity
      * @param amount Amount in base units
-     * @return true if coins were fully given, false otherwise
+     * @return CoinOperationResult with SUCCESS or NOT_ENOUGH_SPACE
+     * @since 1.2.0
      */
-    boolean giveCoins(@Nonnull Player player, long amount);
+    CoinOperationResult giveCoins(@Nonnull Player player, long amount);
     
     /**
      * Take coins from player's inventory.
      * 
      * @param player Player entity
      * @param amount Amount in base units
-     * @return true if coins were fully taken, false otherwise
+     * @return CoinOperationResult with SUCCESS or INSUFFICIENT_FUNDS
+     * @since 1.2.0
      */
-    boolean takeCoins(@Nonnull Player player, long amount);
+    CoinOperationResult takeCoins(@Nonnull Player player, long amount);
+
     
     // ========== World Drop Operations ==========
     
@@ -121,9 +136,10 @@ public interface PhysicalCoinsProvider {
      * @param player Player entity
      * @param playerUuid Player's UUID
      * @param amount Amount to deposit
-     * @return true if successful
+     * @return CoinOperationResult with SUCCESS or INSUFFICIENT_FUNDS
+     * @since 1.2.0
      */
-    boolean bankDeposit(@Nonnull Player player, @Nonnull UUID playerUuid, long amount);
+    CoinOperationResult bankDeposit(@Nonnull Player player, @Nonnull UUID playerUuid, long amount);
     
     /**
      * Withdraw coins from bank to inventory.
@@ -132,9 +148,10 @@ public interface PhysicalCoinsProvider {
      * @param player Player entity
      * @param playerUuid Player's UUID
      * @param amount Amount to withdraw
-     * @return true if successful
+     * @return CoinOperationResult with SUCCESS, INSUFFICIENT_FUNDS, or NOT_ENOUGH_SPACE
+     * @since 1.2.0
      */
-    boolean bankWithdraw(@Nonnull Player player, @Nonnull UUID playerUuid, long amount);
+    CoinOperationResult bankWithdraw(@Nonnull Player player, @Nonnull UUID playerUuid, long amount);
     
     /**
      * Get total wealth (bank + physical coins in inventory).

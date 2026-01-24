@@ -9,6 +9,7 @@ import com.ecotale.economy.EconomyManager;
 import com.ecotale.hud.BalanceHud;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.player.AddPlayerToWorldEvent;
+import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -80,12 +81,36 @@ public class Main extends JavaPlugin {
                 
                 // Setup Balance HUD if enabled
                 if (Main.CONFIG.get().isEnableHudDisplay()) {
-                    BalanceHud hud = new BalanceHud(playerRef);
-                    com.ecotale.util.HudHelper.setCustomHud(player, playerRef, hud);
-                    com.ecotale.systems.BalanceHudSystem.registerHud(playerRef.getUuid(), hud);
+                    // Check if player already has a HUD (world change, not first join)
+                    BalanceHud existingHud = com.ecotale.systems.BalanceHudSystem.getHud(playerRef.getUuid());
+                    if (existingHud != null) {
+                        // Reuse existing HUD, just re-register with HudManager
+                        com.ecotale.util.HudHelper.setCustomHud(player, playerRef, existingHud);
+                    } else {
+                        // First join - create new HUD
+                        BalanceHud hud = new BalanceHud(playerRef);
+                        com.ecotale.util.HudHelper.setCustomHud(player, playerRef, hud);
+                        com.ecotale.systems.BalanceHudSystem.registerHud(playerRef.getUuid(), hud);
+                    }
                 }
             }
         });
+        
+        // Cleanup when player disconnects
+        this.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, (event) -> {
+            var playerRef = event.getPlayerRef();
+            if (playerRef != null) {
+                com.ecotale.systems.BalanceHudSystem.removePlayerHud(playerRef.getUuid());
+                this.economyManager.scheduleEviction(playerRef.getUuid());
+                com.ecotale.api.EcotaleAPI.resetRateLimit(playerRef.getUuid());
+            }
+        });
+        
+
+
+        // Initialize security logger
+        // Initialize performance monitor
+        new com.ecotale.util.PerformanceMonitor();
 
         this.getLogger().at(Level.INFO).log("Ecotale Economy loaded - HUD balance display active!");
     }
@@ -93,6 +118,17 @@ public class Main extends JavaPlugin {
     @Override
     protected void shutdown() {
         this.getLogger().at(Level.INFO).log("Ecotale shutting down - saving data...");
+        
+        // Shutdown security logger
+        if (com.ecotale.security.SecurityLogger.getInstance() != null) {
+            com.ecotale.security.SecurityLogger.getInstance().shutdown();
+        }
+
+        // Shutdown performance monitor
+        if (com.ecotale.util.PerformanceMonitor.getInstance() != null) {
+            com.ecotale.util.PerformanceMonitor.getInstance().shutdown();
+        }
+
         if (this.economyManager != null) {
             this.economyManager.shutdown();
         }

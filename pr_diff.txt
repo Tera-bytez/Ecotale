@@ -1,0 +1,552 @@
+﻿diff --git a/build.gradle b/build.gradle
+index 0c8dd37..e75a532 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -18,6 +18,9 @@ tasks.withType(JavaCompile) {
+ 
+ repositories {
+     mavenCentral()
++    maven {
++        url "https://repo.codemc.io/repository/creatorfromhell/"
++    }
+ }
+ 
+ dependencies {
+@@ -37,6 +40,10 @@ dependencies {
+     
+     // SimpleHUD-Lib is now inlined in com.ecotale.lib.simplehud
+     // No external dependency needed
++
++    //VaultUnlocked
++    compileOnly 'net.cfh.vault:VaultUnlocked:2.18.3'
++    compileOnly 'org.jetbrains:annotations:26.0.2'
+ }
+ 
+ processResources {
+diff --git a/src/main/java/com/ecotale/Main.java b/src/main/java/com/ecotale/Main.java
+index 7318542..507e7f8 100644
+--- a/src/main/java/com/ecotale/Main.java
++++ b/src/main/java/com/ecotale/Main.java
+@@ -7,6 +7,10 @@
+ import com.ecotale.config.EcotaleConfig;
+ import com.ecotale.economy.EconomyManager;
+ import com.ecotale.hud.BalanceHud;
++import com.ecotale.lib.vaultunlocked.VaultUnlockedPlugin;
++import com.hypixel.hytale.common.plugin.PluginIdentifier;
++import com.hypixel.hytale.common.semver.SemverRange;
++import com.hypixel.hytale.server.core.HytaleServer;
+ import com.hypixel.hytale.server.core.entity.entities.Player;
+ import com.hypixel.hytale.server.core.event.events.player.AddPlayerToWorldEvent;
+ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+@@ -34,7 +38,7 @@ public class Main extends JavaPlugin {
+     
+     private EconomyManager economyManager;
+     
+-    public Main(@NonNullDecl JavaPluginInit init) {
++    public Main(@NonNullDecl final JavaPluginInit init) {
+         super(init);
+         CONFIG = this.withConfig("Ecotale", EcotaleConfig.CODEC);
+     }
+@@ -54,6 +58,9 @@ protected void setup() {
+             CONFIG.get().getRateLimitBurst(),
+             CONFIG.get().getRateLimitRefill()
+         );
++
++        // Check for VaultUnlocked support
++        initVaultUnlocked();
+         
+         // Check for MultipleHUD compatibility
+         com.ecotale.util.HudHelper.init();
+@@ -65,22 +72,22 @@ protected void setup() {
+         
+         // Register player join event for HUD setup
+         this.getEventRegistry().registerGlobal(AddPlayerToWorldEvent.class, (event) -> {
+-            var player = event.getHolder().getComponent(Player.getComponentType());
+-            var playerRef = event.getHolder().getComponent(PlayerRef.getComponentType());
++            final var player = event.getHolder().getComponent(Player.getComponentType());
++            final var playerRef = event.getHolder().getComponent(PlayerRef.getComponentType());
+             
+             if (player != null && playerRef != null) {
+                 // Ensure player has an account
+                 this.economyManager.ensureAccount(playerRef.getUuid());
+                 
+                 // Cache player name for leaderboards (H2 only)
+-                var h2Storage = this.economyManager.getH2Storage();
++                final var h2Storage = this.economyManager.getH2Storage();
+                 if (h2Storage != null) {
+                     h2Storage.updatePlayerName(playerRef.getUuid(), playerRef.getUsername());
+                 }
+                 
+                 // Setup Balance HUD if enabled
+                 if (Main.CONFIG.get().isEnableHudDisplay()) {
+-                    BalanceHud hud = new BalanceHud(playerRef);
++                    final BalanceHud hud = new BalanceHud(playerRef);
+                     com.ecotale.util.HudHelper.setCustomHud(player, playerRef, hud);
+                     com.ecotale.systems.BalanceHudSystem.registerHud(playerRef.getUuid(), hud);
+                 }
+@@ -89,6 +96,20 @@ protected void setup() {
+ 
+         this.getLogger().at(Level.INFO).log("Ecotale Economy loaded - HUD balance display active!");
+     }
++
++    private void initVaultUnlocked() {
++        if (HytaleServer.get().getPluginManager().hasPlugin(
++                PluginIdentifier.fromString("TheNewEconomy:VaultUnlocked"),
++                SemverRange.WILDCARD
++                                                           )) {
++            this.getLogger().atInfo().log("VaultUnlocked is installed, enabling VaultUnlocked support.");
++
++            VaultUnlockedPlugin.setup(this.getLogger());
++
++        } else {
++            this.getLogger().at(Level.INFO).log("VaultUnlocked is not installed, disabling VaultUnlocked support.");
++        }
++    }
+     
+     @Override
+     protected void shutdown() {
+diff --git a/src/main/java/com/ecotale/lib/vaultunlocked/EcotaleUnlocked.java b/src/main/java/com/ecotale/lib/vaultunlocked/EcotaleUnlocked.java
+new file mode 100644
+index 0000000..c76107f
+--- /dev/null
++++ b/src/main/java/com/ecotale/lib/vaultunlocked/EcotaleUnlocked.java
+@@ -0,0 +1,418 @@
++package com.ecotale.lib.vaultunlocked;
++
++import com.ecotale.Main;
++import com.ecotale.api.EcotaleAPI;
++import net.milkbowl.vault2.economy.AccountPermission;
++import net.milkbowl.vault2.economy.Economy;
++import net.milkbowl.vault2.economy.EconomyResponse;
++import org.jetbrains.annotations.NotNull;
++
++import java.math.BigDecimal;
++import java.util.Collection;
++import java.util.List;
++import java.util.Map;
++import java.util.Optional;
++import java.util.UUID;
++
++/**
++ * The EcotaleUnlocked class serves as an implementation of the Economy interface
++ * for the EcoTale plugin, providing methods to manage account balances,
++ * currency formatting, and other economy-related functionality.
++ *
++ * This implementation does not support multi-currency, multi-world, or shared accounts,
++ * as these concepts are outside the scope of the EcoTale plugin's design.
++ *
++ * Key Features:
++ * - Provides methods to manage player accounts and their balances.
++ * - Supports default currency with a single naming schema.
++ * - Handles account operations such as creation, deletion, and balance checks.
++ * - Ensures integration with the EcoTale API for balance modifications and retrieval.
++ * - Deprecates some Vault methods due to lack of multi-world or multi-currency support.
++ *
++ * Thread-Safety:
++ * This class is designed to be thread-safe by relying on the thread-safe features
++ * of the underlying EcoTale API and configuration mechanisms.
++ *
++ * Limitations:
++ * - Multi-currency functionality is not supported; the default currency is used exclusively.
++ * - Multi-world account management is not implemented; all operations are world-agnostic.
++ * - Usernames are not stored or managed within EcoTale, and only UUIDs are used.
++ * - Shared account support is explicitly not implemented.
++ *
++ * Dependencies:
++ * - EcoTale plugin and its API.
++ * - Configuration management through the Main class.
++ *
++ * See the Economy interface for details on method contracts.
++ *
++ * @see Economy
++ * @author creatorfromhell
++ */
++public class EcotaleUnlocked implements Economy {
++
++    private final Main plugin = Main.getInstance();
++    //hold a default currency instance as the symbol since there's not really a concept of singular/plural naming
++    private final String defaultCurrency = Main.CONFIG.get().getCurrencySymbol();
++
++    @Override
++    public boolean isEnabled() {
++
++        return true;
++    }
++
++    @NotNull
++    @Override
++    public String getName() {
++
++        return "EcoTale";
++    }
++
++    @Override
++    public boolean hasSharedAccountSupport() {
++
++        return false;
++    }
++
++    @Override
++    public boolean hasMultiCurrencySupport() {
++
++        return false;
++    }
++
++    @Override
++    public int fractionalDigits(@NotNull final String pluginName) {
++
++        return Main.CONFIG.get().getDecimalPlaces();
++    }
++
++    /**
++     * @deprecated
++     */
++    @NotNull
++    @Override
++    public String format(@NotNull final BigDecimal amount) {
++
++        return format(plugin.getName(), amount);
++    }
++
++    @NotNull
++    @Override
++    public String format(@NotNull final String pluginName, @NotNull final BigDecimal amount) {
++
++        return Main.CONFIG.get().format(amount.doubleValue());
++    }
++
++    /**
++     * @deprecated
++     */
++    @NotNull
++    @Override
++    public String format(@NotNull final BigDecimal amount, @NotNull final String currency) {
++
++
++        return Main.CONFIG.get().format(amount.doubleValue());
++    }
++
++    @NotNull
++    @Override
++    public String format(@NotNull final String pluginName, @NotNull final BigDecimal amount, @NotNull final String currency) {
++
++        return Main.CONFIG.get().format(amount.doubleValue());
++    }
++
++    @Override
++    public boolean hasCurrency(@NotNull final String currency) {
++
++        //EcoTale doesn't support multi-currency
++        return false;
++    }
++
++    @NotNull
++    @Override
++    public String getDefaultCurrency(@NotNull final String pluginName) {
++
++        //EcoTale doesn't support multi-currency
++        return defaultCurrency;
++    }
++
++    @NotNull
++    @Override
++    public String defaultCurrencyNamePlural(@NotNull final String pluginName) {
++
++        //return the same for singular and plural because EcoTale doesn't have plural/singular configs.
++        return defaultCurrency;
++    }
++
++    @NotNull
++    @Override
++    public String defaultCurrencyNameSingular(@NotNull final String pluginName) {
++
++        //return the same for singular and plural because EcoTale doesn't have plural/singular configs.
++        return defaultCurrency;
++    }
++
++    @Override
++    public @NotNull Collection<String> currencies() {
++
++        //EcoTale doesn't support multi-currency
++        return List.of(defaultCurrency);
++    }
++
++    /**
++     * @deprecated
++     */
++    @Override
++    public boolean createAccount(@NotNull final UUID accountID, @NotNull final String name) {
++
++        return createAccount(accountID, name, true);
++    }
++
++    @Override
++    public boolean createAccount(@NotNull final UUID accountID, @NotNull final String name, final boolean player) {
++
++        if (!player) {
++            //EcoTale doesn't support non-player accounts
++            return false;
++        }
++
++        plugin.getEconomyManager().ensureAccount(accountID);
++        return true;
++    }
++
++    /**
++     * @deprecated
++     */
++    @Override
++    public boolean createAccount(@NotNull final UUID accountID, @NotNull final String name, @NotNull final String worldName) {
++
++        //refer back to the standard method because there's no concept of multi-world in EcoTale.
++        return createAccount(accountID, name, true);
++    }
++
++    @Override
++    public boolean createAccount(@NotNull final UUID accountID, @NotNull final String name, @NotNull final String worldName, final boolean player) {
++
++        //refer back to the standard method because there's no concept of multi-world in EcoTale.
++        return createAccount(accountID, name, player);
++    }
++
++    @Override
++    public @NotNull Map<UUID, String> getUUIDNameMap() {
++
++        //EcoTale doesn't store usernames
++        return Map.of();
++    }
++
++    @Override
++    public Optional<String> getAccountName(@NotNull final UUID accountID) {
++
++        //EcoTale doesn't store usernames
++        return Optional.empty();
++    }
++
++    @Override
++    public boolean hasAccount(@NotNull final UUID accountID) {
++
++        return plugin.getEconomyManager().getAllBalances().containsKey(accountID);
++    }
++
++    @Override
++    public boolean hasAccount(@NotNull final UUID accountID, @NotNull final String worldName) {
++
++        //refer back to the standard method because there's no concept of multi-world in EcoTale.
++        return hasAccount(accountID);
++    }
++
++    @Override
++    public boolean renameAccount(@NotNull final UUID accountID, @NotNull final String name) {
++
++        //ecotale doesn't store usernames
++        return true;
++    }
++
++    @Override
++    public boolean renameAccount(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String name) {
++
++        //ecotale doesn't store usernames
++        return true;
++    }
++
++    @Override
++    public boolean deleteAccount(@NotNull final String pluginName, @NotNull final UUID accountID) {
++
++        plugin.getEconomyManager().getStorage().deletePlayer(accountID);
++        return true;
++    }
++
++    @Override
++    public boolean accountSupportsCurrency(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String currency) {
++
++        //return true, because we don't have a concept of multi-currency in EcoTale
++        return true;
++    }
++
++    @Override
++    public boolean accountSupportsCurrency(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String currency, @NotNull final String world) {
++
++        //return true, because we don't have a concept of multi-currency in EcoTale
++        return true;
++    }
++
++    /**
++     * @deprecated
++     */
++    @NotNull
++    @Override
++    public BigDecimal getBalance(@NotNull final String pluginName, @NotNull final UUID accountID) {
++
++        return new BigDecimal(EcotaleAPI.getBalance(accountID));
++    }
++
++    /**
++     * @deprecated
++     */
++    @NotNull
++    @Override
++    public BigDecimal getBalance(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String world) {
++
++        //refer back to the standard method because there's no concept of multi-currency or multi-world in EcoTale.
++        return getBalance(pluginName, accountID);
++    }
++
++    /**
++     * @deprecated
++     */
++    @NotNull
++    @Override
++    public BigDecimal getBalance(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String world, @NotNull final String currency) {
++
++        //refer back to the standard method because there's no concept of multi-currency or multi-world in EcoTale.
++        return getBalance(pluginName, accountID);
++    }
++
++    @Override
++    public boolean has(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final BigDecimal amount) {
++
++        return EcotaleAPI.hasBalance(accountID, amount.doubleValue());
++    }
++
++    @Override
++    public boolean has(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String worldName, @NotNull final BigDecimal amount) {
++
++        //refer back to the standard method because there's no concept of multi-currency or multi-world in EcoTale.
++        return has(pluginName, accountID, amount);
++    }
++
++    @Override
++    public boolean has(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String worldName, @NotNull final String currency, @NotNull final BigDecimal amount) {
++
++        //refer back to the standard method because there's no concept of multi-currency or multi-world in EcoTale.
++        return has(pluginName, accountID, amount);
++    }
++
++    @Override
++    public @NotNull EconomyResponse withdraw(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final BigDecimal amount) {
++
++        final boolean withdrawResult = EcotaleAPI.withdraw(accountID, amount.doubleValue(), "VaultUnlocked withdraw from plugin " + pluginName);
++        final EconomyResponse.ResponseType status = (withdrawResult)? EconomyResponse.ResponseType.SUCCESS : EconomyResponse.ResponseType.FAILURE;
++
++        return new EconomyResponse(amount, getBalance(pluginName, accountID), status, "Withdrawal result: " + status.name());
++    }
++
++    @NotNull
++    @Override
++    public EconomyResponse withdraw(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String worldName, @NotNull final BigDecimal amount) {
++
++        //refer back to the standard method because there's no concept of multi-currency or multi-world in EcoTale.
++        return withdraw(pluginName, accountID, amount);
++    }
++
++    @NotNull
++    @Override
++    public EconomyResponse withdraw(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String worldName, @NotNull final String currency, @NotNull final BigDecimal amount) {
++
++        //refer back to the standard method because there's no concept of multi-currency or multi-world in EcoTale.
++        return withdraw(pluginName, accountID, amount);
++    }
++
++    @NotNull
++    @Override
++    public EconomyResponse deposit(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final BigDecimal amount) {
++
++        final boolean depositResult = EcotaleAPI.deposit(accountID, amount.doubleValue(), "VaultUnlocked deposit from plugin " + pluginName);
++        final EconomyResponse.ResponseType status = (depositResult)? EconomyResponse.ResponseType.SUCCESS : EconomyResponse.ResponseType.FAILURE;
++
++        return new EconomyResponse(amount, getBalance(pluginName, accountID), status, "Deposit result: " + status.name());
++    }
++
++    @NotNull
++    @Override
++    public EconomyResponse deposit(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String worldName, @NotNull final BigDecimal amount) {
++
++        //refer back to the standard method because there's no concept of multi-currency or multi-world in EcoTale.
++        return deposit(pluginName, accountID, amount);
++    }
++
++    @NotNull
++    @Override
++    public EconomyResponse deposit(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String worldName, @NotNull final String currency, @NotNull final BigDecimal amount) {
++
++        //refer back to the standard method because there's no concept of multi-currency or multi-world in EcoTale.
++        return deposit(pluginName, accountID, amount);
++    }
++
++    //The methods below don't need implemented because EcoTale doesn't support shared accounts.
++    @Override
++    public boolean createSharedAccount(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final String name, @NotNull final UUID owner) {
++
++        return false;
++    }
++
++    @Override
++    public boolean isAccountOwner(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final UUID uuid) {
++
++        return false;
++    }
++
++    @Override
++    public boolean setOwner(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final UUID uuid) {
++
++        return false;
++    }
++
++    @Override
++    public boolean isAccountMember(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final UUID uuid) {
++
++        return false;
++    }
++
++    @Override
++    public boolean addAccountMember(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final UUID uuid) {
++
++        return false;
++    }
++
++    @Override
++    public boolean addAccountMember(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final UUID uuid, final @NotNull AccountPermission... initialPermissions) {
++
++        return false;
++    }
++
++    @Override
++    public boolean removeAccountMember(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final UUID uuid) {
++
++        return false;
++    }
++
++    @Override
++    public boolean hasAccountPermission(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final UUID uuid, @NotNull final AccountPermission permission) {
++
++        return false;
++    }
++
++    @Override
++    public boolean updateAccountPermission(@NotNull final String pluginName, @NotNull final UUID accountID, @NotNull final UUID uuid, @NotNull final AccountPermission permission, final boolean value) {
++
++        return false;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/ecotale/lib/vaultunlocked/VaultUnlockedPlugin.java b/src/main/java/com/ecotale/lib/vaultunlocked/VaultUnlockedPlugin.java
+new file mode 100644
+index 0000000..9816ad7
+--- /dev/null
++++ b/src/main/java/com/ecotale/lib/vaultunlocked/VaultUnlockedPlugin.java
+@@ -0,0 +1,13 @@
++package com.ecotale.lib.vaultunlocked;
++
++import com.hypixel.hytale.logger.HytaleLogger;
++import net.cfh.vault.VaultUnlockedServicesManager;
++
++public class VaultUnlockedPlugin {
++
++    public static void setup(final HytaleLogger logger) {
++        logger.atInfo().log("VaultUnlocked is installed, enabling VaultUnlocked support.");
++
++        VaultUnlockedServicesManager.get().economy(new EcotaleUnlocked());
++    }
++}
+\ No newline at end of file

@@ -48,6 +48,7 @@ public class EcoAdminCommand extends AbstractAsyncCommand {
         this.addSubCommand(new EcoTopCommand());
         this.addSubCommand(new EcoSaveCommand());
         this.addSubCommand(new EcoHudCommand());
+        this.addSubCommand(new EcoMetricsCommand());
     }
     
     @NonNullDecl
@@ -83,6 +84,7 @@ public class EcoAdminCommand extends AbstractAsyncCommand {
         commandContext.sender().sendMessage(Message.raw("  /eco take <amount> - Remove from balance").color(Color.GRAY));
         commandContext.sender().sendMessage(Message.raw("  /eco reset - Reset to starting balance").color(Color.GRAY));
         commandContext.sender().sendMessage(Message.raw("  /eco top - Show top balances").color(Color.GRAY));
+        commandContext.sender().sendMessage(Message.raw("  /eco metrics - Show performance stats").color(Color.GRAY));
         commandContext.sender().sendMessage(Message.raw("  /eco save - Force save data").color(Color.GRAY));
         return CompletableFuture.completedFuture(null);
     }
@@ -364,6 +366,38 @@ public class EcoAdminCommand extends AbstractAsyncCommand {
             String status = newValue ? "§aEnabled" : "§cDisabled";
             ctx.sendMessage(Message.raw("HUD Display: " + status).color(newValue ? Color.GREEN : Color.RED));
             ctx.sendMessage(Message.raw("Use /eco save to persist this change").color(Color.GRAY));
+            return CompletableFuture.completedFuture(null);
+        }
+    }
+    
+    // ========== METRICS COMMAND ==========
+    private static class EcoMetricsCommand extends AbstractAsyncCommand {
+        public EcoMetricsCommand() {
+            super("metrics", "Show performance and scaling metrics");
+            this.addAliases("stats", "perf");
+        }
+        
+        @NonNullDecl
+        @Override
+        protected CompletableFuture<Void> executeAsync(CommandContext ctx) {
+            var monitor = com.ecotale.util.PerformanceMonitor.getInstance();
+            if (monitor != null) {
+                Color gold = new Color(255, 215, 0);
+                Color white = Color.WHITE;
+                Color green = new Color(50, 205, 50);
+
+                ctx.sendMessage(Message.raw("--- Ecotale Economy Metrics ---").color(gold));
+                
+                ctx.sendMessage(Message.join(
+                    Message.raw("Cached Balances: ").color(white),
+                    Message.raw(monitor.getCachedPlayers() + " / 1000").color(green)
+                ));
+                
+                ctx.sendMessage(Message.raw("---------------------------------").color(gold));
+                ctx.sendMessage(Message.raw("System metrics moved to /guard metrics").color(Color.GRAY));
+            } else {
+                ctx.sendMessage(Message.raw("Performance monitor is not active.").color(Color.RED));
+            }
             return CompletableFuture.completedFuture(null);
         }
     }

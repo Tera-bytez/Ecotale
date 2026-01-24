@@ -2,6 +2,28 @@
 
 All notable changes to Ecotale will be documented in this file.
 
+## [1.0.4] - 2026-01-20
+
+### Fixed
+- **Performance improvements** - Optimized player loading and memory management for large databases
+- **HUD Stability** - Improved instance handling during world changes
+
+### Added
+- **Optimized Data Loading** - Implemented lazy loading and cache eviction policies
+
+---
+
+## [1.0.3] - 2026-01-20
+
+### Fixed
+- **HUD stability** - improved error handling
+- **World change logic** - resolved issues when teleporting
+
+### Changed
+- **EnableHudAnimation** defaults to `false` for better mod compatibility
+
+---
+
 ## [1.0.2] - 2026-01-19
 
 ### Fixed

@@ -354,6 +354,36 @@ public class H2StorageProvider implements StorageProvider {
         }, executor);
     }
     
+    /**
+     * Get top N balances directly from database (efficient for leaderboards).
+     * Uses SQL LIMIT to avoid loading all players into memory.
+     * 
+     * @param limit Maximum number of entries to return
+     * @return List of PlayerBalance sorted by balance descending
+     */
+    public CompletableFuture<List<PlayerBalance>> getTopBalances(int limit) {
+        return CompletableFuture.supplyAsync(() -> {
+            List<PlayerBalance> results = new java.util.ArrayList<>();
+            try {
+                String sql = "SELECT uuid, player_name, balance FROM balances ORDER BY balance DESC LIMIT ?";
+                try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                    ps.setInt(1, Math.min(limit, 100)); // Cap at 100 for safety
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            UUID uuid = UUID.fromString(rs.getString("uuid"));
+                            PlayerBalance pb = new PlayerBalance(uuid);
+                            pb.setBalance(rs.getDouble("balance"), "Leaderboard load");
+                            results.add(pb);
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                LOGGER.at(Level.WARNING).log("Failed to get top balances: %s", e.getMessage());
+            }
+            return results;
+        }, executor);
+    }
+    
     @Override
     public CompletableFuture<Void> deletePlayer(@Nonnull UUID playerUuid) {
         return CompletableFuture.runAsync(() -> {

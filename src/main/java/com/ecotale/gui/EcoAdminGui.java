@@ -74,6 +74,15 @@ public class EcoAdminGui extends InteractiveCustomUIPage<EcoAdminGui.AdminGuiDat
         this.playerRef = playerRef;
     }
     
+    /**
+     * SECURITY: Centralized permission check for admin actions.
+     * Matches the permission required by /eco command.
+     */
+    private boolean hasAdminPermission() {
+        return com.hypixel.hytale.server.core.permissions.PermissionsModule.get()
+            .hasPermission(playerRef.getUuid(), "ecotale.admin");
+    }
+    
     // Per-player translation helper
     private String t(String key, String fallback) {
         return com.ecotale.util.TranslationHelper.t(playerRef, key, fallback);
@@ -177,6 +186,20 @@ public class EcoAdminGui extends InteractiveCustomUIPage<EcoAdminGui.AdminGuiDat
     public void handleDataEvent(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store, 
                                 @NonNullDecl AdminGuiData data) {
         super.handleDataEvent(ref, store, data);
+        
+        // === SECURITY: Verify permission before processing ANY event ===
+        if (!hasAdminPermission()) {
+            com.ecotale.security.SecurityLogger logger = com.ecotale.security.SecurityLogger.getInstance();
+            if (logger != null) {
+                String details = data.tab != null ? "Tab: " + data.tab : 
+                                (data.action != null ? "Action: " + data.action : "Data update");
+                logger.logUnauthorizedAccess(playerRef, "EcoAdminGui", "Interaction", details);
+            }
+            
+            this.close(); // Force close the GUI
+            playerRef.sendMessage(Message.raw("[Ecotale] Access denied. This incident has been logged.").color(Color.RED));
+            return;
+        }
         
         // Handle tab change
         if (data.tab != null) {

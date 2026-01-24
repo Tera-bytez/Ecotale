@@ -249,11 +249,19 @@ public final class EcotaleAPI {
      * Useful for leaderboards.
      * NOT rate limited.
      * 
+     * PERFORMANCE: Queries database directly with LIMIT instead of loading all players.
+     * 
      * @param limit Maximum number of entries to return
      * @return List of PlayerBalance objects sorted by balance descending
      */
     public static java.util.List<com.ecotale.economy.PlayerBalance> getTopBalances(int limit) {
         validateAvailable();
+        // Use efficient DB query instead of loading all players
+        var storage = com.ecotale.Main.getInstance().getEconomyManager().getStorage();
+        if (storage instanceof com.ecotale.storage.H2StorageProvider h2) {
+            return h2.getTopBalances(limit).join();
+        }
+        // Fallback for other storage providers (uses cache only)
         return economyManager.getAllBalances().values().stream()
             .sorted((a, b) -> Double.compare(b.getBalance(), a.getBalance()))
             .limit(limit)
@@ -392,6 +400,15 @@ public final class EcotaleAPI {
     public static void cleanupRateLimiter() {
         if (rateLimiter != null) {
             rateLimiter.cleanup();
+        }
+    }
+    
+    /**
+     * Reset rate limit for a specific player (e.g., on disconnect).
+     */
+    public static void resetRateLimit(UUID playerUuid) {
+        if (rateLimiter != null) {
+            rateLimiter.resetBucket(playerUuid);
         }
     }
 }

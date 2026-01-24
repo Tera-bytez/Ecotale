@@ -11,6 +11,7 @@ import com.ecotale.storage.StorageProvider;
 import com.ecotale.systems.BalanceHudSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -20,6 +21,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -75,9 +79,17 @@ public class EconomyManager {
     /** Time in milliseconds between lock cleanup cycles (30 minutes) */
     private static final long LOCK_CLEANUP_INTERVAL_MS = 30 * 60 * 1000;
     
-    // Auto-save thread
-    private volatile boolean running = true;
-    private final Thread saveThread;
+    // Delayed cache eviction for reconnect protection
+    private final ConcurrentHashMap<UUID, Long> pendingEvictions = new ConcurrentHashMap<>();
+    
+    /** Delay before evicting disconnected players from cache (5 minutes) */
+    private static final long EVICTION_DELAY_MS = 5 * 60 * 1000;
+    
+    /** Maximum players in cache to prevent unbounded growth */
+    private static final int MAX_CACHE_SIZE = 1000;
+    
+    // Auto-save executor
+    private final ScheduledExecutorService saveExecutor;
     private final HytaleLogger logger;
     
     public EconomyManager(@Nonnull Object plugin) {
@@ -105,16 +117,20 @@ public class EconomyManager {
         }
         storage.initialize().join();
         
-        // PERF-01: Bulk preload all player data on startup
-        bulkPreload();
+        // Lazy loading: players are loaded when they join instead of all at once
+        // bulkPreload();
         
-        // Start auto-save thread
-        this.saveThread = new Thread(this::autoSaveLoop, "Ecotale-AutoSave");
-        this.saveThread.setDaemon(true);
-        this.saveThread.start();
+        // Start auto-save using virtual threads (Java 25)
+        this.saveExecutor = Executors.newSingleThreadScheduledExecutor(
+            Thread.ofVirtual().name("Ecotale-Economy-Maintenance-", 0).factory()
+        );
         
-        logger.at(Level.INFO).log("EconomyManager initialized with %s (%d players preloaded)", 
-            storage.getName(), cache.size());
+        long interval = Main.CONFIG.get().getAutoSaveInterval();
+        this.saveExecutor.scheduleAtFixedRate(this::performMaintenance, 
+            interval, interval, TimeUnit.SECONDS);
+        
+        logger.at(Level.INFO).log("EconomyManager initialized with %s (lazy loading enabled, auto-save: %ds)", 
+            storage.getName(), interval);
     }
     
     // ========== Lock Management ==========
@@ -132,12 +148,16 @@ public class EconomyManager {
     /**
      * Ensure a player has an account (load from storage or create new).
      * This is called when a player joins the server.
+     * Cancels any pending eviction if the player reconnects.
      */
     public void ensureAccount(@Nonnull UUID playerUuid) {
+        // Cancel pending eviction if reconnecting
+        pendingEvictions.remove(playerUuid);
+        
         cache.computeIfAbsent(playerUuid, uuid -> {
             // Load from storage or create new
             PlayerBalance balance = storage.loadPlayer(uuid).join();
-            dirtyPlayers.add(uuid); // Mark as dirty to ensure it's saved
+            dirtyPlayers.add(uuid);
             return balance;
         });
     }
@@ -390,29 +410,32 @@ public class EconomyManager {
     }
     
     /**
-     * Auto-save loop running on background thread.
-     * Only saves players that have changes (dirty tracking).
+     * Periodic maintenance task:
+     * 1. Save dirty players
+     * 2. Cleanup stale locks
+     * 3. Cleanup rate limiter
+     * 4. Process pending cache evictions
      */
-    private void autoSaveLoop() {
-        while (running) {
-            try {
-                Thread.sleep(Main.CONFIG.get().getAutoSaveInterval() * 1000L);
-                
-                if (!dirtyPlayers.isEmpty()) {
-                    saveDirtyPlayers();
-                }
-                
-                // PERF-03: Lock eviction for offline players (every 30 min)
-                if (System.currentTimeMillis() - lastLockCleanup > LOCK_CLEANUP_INTERVAL_MS) {
-                    cleanupStaleLocks();
-                    lastLockCleanup = System.currentTimeMillis();
-                    
-                    // PERF-04: Cleanup API rate limiter buckets (MEMORY LEAK FIX)
-                    com.ecotale.api.EcotaleAPI.cleanupRateLimiter();
-                }
-            } catch (InterruptedException e) {
-                break;
+    private void performMaintenance() {
+        try {
+            // 1. Save dirty players
+            if (!dirtyPlayers.isEmpty()) {
+                saveDirtyPlayers();
             }
+            
+            // 2 & 3. Lock and RateLimit cleanup (every 30 min)
+            long now = System.currentTimeMillis();
+            if (now - lastLockCleanup > LOCK_CLEANUP_INTERVAL_MS) {
+                cleanupStaleLocks();
+                lastLockCleanup = now;
+                com.ecotale.api.EcotaleAPI.cleanupRateLimiter();
+            }
+            
+            // 4. Process delayed cache evictions
+            processPendingEvictions();
+            
+        } catch (Exception e) {
+            logger.at(Level.SEVERE).log("Error in maintenance task: %s", e.getMessage());
         }
     }
     
@@ -454,9 +477,17 @@ public class EconomyManager {
         logger.at(Level.INFO).log("EconomyManager shutdown starting... (%d dirty, %d cached)", 
             dirtyPlayers.size(), cache.size());
         
-        running = false;
-        logger.at(Level.INFO).log("Interrupting auto-save thread...");
-        saveThread.interrupt();
+        // Shut down scheduled maintenance
+        if (saveExecutor != null) {
+            saveExecutor.shutdown();
+            try {
+                if (!saveExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    saveExecutor.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                saveExecutor.shutdownNow();
+            }
+        }
         
         // Save ALL cached players on shutdown (not just dirty) to ensure nothing is lost
         // Use SYNC save to avoid executor issues during server shutdown
@@ -580,6 +611,68 @@ public class EconomyManager {
         
         if (removed > 0) {
             logger.at(Level.FINE).log("Cleaned up %d stale player locks", removed);
+        }
+    }
+    
+    /**
+     * Schedule a player for cache eviction after delay.
+     * Called when player disconnects.
+     */
+    public void scheduleEviction(@Nonnull UUID playerUuid) {
+        // Save any pending changes first
+        if (dirtyPlayers.contains(playerUuid)) {
+            PlayerBalance balance = cache.get(playerUuid);
+            if (balance != null) {
+                storage.savePlayer(playerUuid, balance);
+                dirtyPlayers.remove(playerUuid);
+            }
+        }
+        
+        // Schedule for eviction after delay
+        pendingEvictions.put(playerUuid, System.currentTimeMillis() + EVICTION_DELAY_MS);
+    }
+    
+    /**
+     * Process pending evictions and enforce max cache size.
+     * Called periodically from autoSaveLoop.
+     */
+    private void processPendingEvictions() {
+        long now = System.currentTimeMillis();
+        int evicted = 0;
+        
+        // Process delayed evictions
+        for (var entry : new java.util.HashMap<>(pendingEvictions).entrySet()) {
+            if (now >= entry.getValue()) {
+                UUID uuid = entry.getKey();
+                pendingEvictions.remove(uuid);
+                
+                // Only evict if not currently online
+                if (Universe.get().getPlayer(uuid) == null) {
+                    cache.remove(uuid);
+                    playerLocks.remove(uuid);
+                    evicted++;
+                }
+            }
+        }
+        
+        // Enforce max cache size by evicting oldest offline players
+        if (cache.size() > MAX_CACHE_SIZE) {
+            Set<UUID> onlinePlayers = Universe.get().getPlayers().stream()
+                .map(PlayerRef::getUuid)
+                .collect(Collectors.toSet());
+            
+            for (UUID uuid : new java.util.ArrayList<>(cache.keySet())) {
+                if (cache.size() <= MAX_CACHE_SIZE) break;
+                if (!onlinePlayers.contains(uuid)) {
+                    cache.remove(uuid);
+                    playerLocks.remove(uuid);
+                    evicted++;
+                }
+            }
+        }
+        
+        if (evicted > 0) {
+            logger.at(Level.FINE).log("Evicted %d players from cache (size: %d)", evicted, cache.size());
         }
     }
     

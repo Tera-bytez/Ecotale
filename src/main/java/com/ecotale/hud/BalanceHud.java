@@ -83,6 +83,16 @@ public class BalanceHud extends SimpleHud {
         updateDisplayFinal(displayedBalance);
     }
     
+    /**
+     * Cleanup resources when HUD is removed (cancel pending animations)
+     */
+    public void cleanup() {
+        if (animationFuture != null) {
+            HudScheduler.cancel(animationFuture);
+            animationFuture = null;
+        }
+    }
+    
     private void startAnimation() {
         if (animationFuture != null) {
             HudScheduler.cancel(animationFuture);

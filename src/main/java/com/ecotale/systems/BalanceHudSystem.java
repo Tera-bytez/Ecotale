@@ -35,11 +35,11 @@ public class BalanceHudSystem {
     /**
      * Remove HUD tracking when player leaves
      */
-    /**
-     * Remove HUD tracking when player leaves
-     */
     public static void removePlayerHud(UUID playerUuid) {
-        activeHuds.remove(playerUuid);
+        BalanceHud hud = activeHuds.remove(playerUuid);
+        if (hud != null) {
+            hud.cleanup(); // Cancel any pending animations
+        }
     }
 
     /**

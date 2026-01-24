@@ -85,6 +85,8 @@ public class EcotaleConfig {
         .append(new KeyedCodec<>("DebugMode", Codec.BOOLEAN),
             (c, v, e) -> c.debugMode = v, (c, e) -> c.debugMode).add()
         
+
+        
         // Coin appearance settings - per-coin configuration
         .append(new KeyedCodec<>("CoinConfigs", new MapCodec<>(CoinAppearanceConfig.CODEC, HashMap::new)),
             (c, v, e) -> c.coinConfigs = v, (c, e) -> c.coinConfigs).add()
@@ -132,6 +134,8 @@ public class EcotaleConfig {
     
     // Debug mode - enables verbose logging and /ecotest command
     private boolean debugMode = false; // Set true for development/troubleshooting
+    
+
     
     // Coin appearance settings - per-coin configuration
     private Map<String, CoinAppearanceConfig> coinConfigs = createDefaultCoinConfigs();
@@ -396,6 +400,8 @@ public class EcotaleConfig {
      * @param debug true for verbose logging
      */
     public void setDebugMode(boolean debug) { this.debugMode = debug; }
+
+
 
     // ========== Coin Appearance ==========
     
