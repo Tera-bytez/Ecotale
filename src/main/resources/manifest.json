@@ -1,20 +1,20 @@
 {
-  "Group": "Ecotale",
-  "Name": "Ecotale",
-  "Version": "1.0.0",
-  "Description": "Economy plugin for Hytale with balance HUD display",
+  "Group": "${group}",
+  "Name": "${name}",
+  "Version": "${version}",
+  "Description": "${description}",
   "Authors": [
     {
       "Name": "Ecotale Team"
     }
   ],
-  "Website": "https://github.com/Tera-bytez/Ecotale",
-  "ServerVersion": "*",
+  "Website": "${website}",
+  "ServerVersion": "${server_version}",
   "Dependencies": {
     "Hytale:EntityModule": "*"
   },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
-  "Main": "com.ecotale.Main",
+  "Main": "${entry_point}",
   "IncludesAssetPack": true
 }
