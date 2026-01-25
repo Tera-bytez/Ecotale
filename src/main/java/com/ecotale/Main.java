@@ -7,7 +7,7 @@ import com.ecotale.commands.PayCommand;
 import com.ecotale.config.EcotaleConfig;
 import com.ecotale.economy.EconomyManager;
 import com.ecotale.hud.BalanceHud;
-import com.ecotale.lib.vaultunlocked.VaultUnlockedPlugin;
+//import com.ecotale.lib.vaultunlocked.VaultUnlockedPlugin; // Disabled - requires Java 25
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.common.semver.SemverRange;
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -60,9 +60,9 @@ public class Main extends JavaPlugin {
             CONFIG.get().getRateLimitRefill()
         );
 
-        // Check for VaultUnlocked support
-        initVaultUnlocked();
-        
+        // Check for VaultUnlocked support - DISABLED (requires Java 25)
+        //initVaultUnlocked();
+
         // Check for MultipleHUD compatibility
         com.ecotale.util.HudHelper.init();
         
@@ -122,6 +122,7 @@ public class Main extends JavaPlugin {
         this.getLogger().at(Level.INFO).log("Ecotale Economy loaded - HUD balance display active!");
     }
 
+    /* DISABLED - VaultUnlocked requires Java 25
     private void initVaultUnlocked() {
         if (HytaleServer.get().getPluginManager().hasPlugin(
                 PluginIdentifier.fromString("TheNewEconomy:VaultUnlocked"),
@@ -135,6 +136,7 @@ public class Main extends JavaPlugin {
             this.getLogger().at(Level.INFO).log("VaultUnlocked is not installed, disabling VaultUnlocked support.");
         }
     }
+    */
     
     @Override
     protected void shutdown() {

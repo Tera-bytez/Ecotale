@@ -11,6 +11,15 @@ java {
     withSourcesJar()
 }
 
+// Exclude VaultUnlocked integration (requires Java 25)
+sourceSets {
+    main {
+        java {
+            exclude 'com/ecotale/lib/vaultunlocked/**'
+        }
+    }
+}
+
 // Show detailed deprecation warnings
 tasks.withType(JavaCompile) {
     options.compilerArgs << '-Xlint:deprecation'
@@ -41,8 +50,8 @@ dependencies {
     // SimpleHUD-Lib is now inlined in com.ecotale.lib.simplehud
     // No external dependency needed
 
-    //VaultUnlocked
-    compileOnly 'net.cfh.vault:VaultUnlocked:2.18.3'
+    //VaultUnlocked - Commented out (requires Java 25)
+    //compileOnly 'net.cfh.vault:VaultUnlocked:2.18.3'
     compileOnly 'org.jetbrains:annotations:26.0.2'
 }
 
