@@ -9,7 +9,7 @@
     }
   ],
   "Website": "${website}",
-  "ServerVersion": "${server_version}",
+  "ServerVersion": "*",
   "Dependencies": {
     "Hytale:EntityModule": "*"
   },
