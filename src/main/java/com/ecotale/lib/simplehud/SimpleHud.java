@@ -142,12 +142,14 @@ public abstract class SimpleHud extends CustomUIHud {
 
     /**
      * Push all pending updates to the client.
-     * Always uses show() to ensure HUD is properly displayed.
+     * Uses incremental update (clear=false) to preserve vanilla HUD elements like PartyHud.
      * Wrapped in try-catch to prevent crashes from propagating (e.g., MultipleHUD issues).
      */
     public void pushUpdates() {
         try {
-            this.show();
+            UICommandBuilder commandBuilder = new UICommandBuilder();
+            this.build(commandBuilder);
+            this.update(false, commandBuilder); // clear=false to preserve vanilla HUD
         } catch (Exception e) {
             // Catch ALL exceptions to prevent crash from propagating
             // This handles MultipleHUD's RuntimeException and other issues
